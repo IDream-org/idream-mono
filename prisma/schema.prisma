@@ -1,0 +1,125 @@
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Users {
+    id             String        @id @default(auto()) @map("_id") @db.ObjectId
+    hashedPassword String
+    firstName      String
+    lastName       String
+    email          String        @unique
+    createdAt      DateTime      @default(now())
+    emailVerified  DateTime?
+    interests      String?
+    description    String?
+    avatar         String?
+    collections    Collections[]
+    categories     Categories[]
+}
+
+enum Roles {
+    Member
+    Admin
+    Owner
+}
+
+type CollectionUsers {
+    user   String
+    userId String
+    role   Roles
+}
+
+model Collections {
+    id         String            @id @default(auto()) @map("_id") @db.ObjectId
+    title      String
+    image      String
+    authorId   String            @db.ObjectId
+    author     Users             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    users      CollectionUsers[]
+    categories Categories[]
+    private    Boolean           @default(true)
+}
+
+model Categories {
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    title         String
+    createdAt     DateTime        @default(now())
+    image         String
+    userId        String          @db.ObjectId
+    user          Users           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    items         CategoryItems[]
+    collections   Collections     @relation(fields: [collectionsId], references: [id], onDelete: Cascade)
+    collectionsId String          @db.ObjectId
+}
+
+enum Icons {
+    AiFillYoutube
+    AiOutlineAmazon
+    AiOutlineArrowDown
+    AiOutlineArrowLeft
+    AiOutlineArrowRight
+    AiOutlineArrowUp
+    RiNetflixFill
+    SiHbo
+    SiHulu
+    TbBrandDisney
+    BsFillArrowDownCircleFill
+    BsFillArrowDownLeftCircleFill
+    BsFillArrowDownLeftSquareFill
+    BsFillArrowDownRightCircleFill
+    BsFillArrowDownRightSquareFill
+    BsFillArrowDownSquareFill
+    BsFillArrowLeftCircleFill
+    BsFillArrowLeftSquareFill
+    BsFillArrowRightCircleFill
+    BsFillArrowRightSquareFill
+    BsFillArrowUpCircleFill
+    BsFillArrowUpLeftCircleFill
+    BsFillArrowUpLeftSquareFill
+    BsFillArrowUpRightCircleFill
+    BsFillArrowUpRightSquareFill
+    BsFillArrowUpSquareFill
+    CgShapeCircle
+    CgShapeHalfCircle
+    CgShapeHexagon
+    CgShapeRhombus
+    CgShapeSquare
+    CgShapeTriangle
+}
+
+type Rating {
+    quality        Float
+    expectations   Float
+    performance    Float
+    recommendation Float
+    overall        Float
+    total          Float
+}
+
+type Comments {
+    author  String
+    userId  String
+    comment String
+}
+
+model CategoryItems {
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    image       String
+    video       String?
+    subtitle    String
+    description String
+    done        Boolean    @default(false)
+    icons       Icons[]
+    createdAt   DateTime   @default(now())
+    rating      Rating?
+    details     Json?
+    categoryId  String     @db.ObjectId
+    categories  Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    comments    Comments[]
+}
