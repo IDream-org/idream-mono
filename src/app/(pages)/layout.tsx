@@ -157,9 +157,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <ListItem
               key={name}
               disablePadding
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                signOut();
+                await signOut();
+                router.push("/");
               }}
             >
               <ListItemButton>
