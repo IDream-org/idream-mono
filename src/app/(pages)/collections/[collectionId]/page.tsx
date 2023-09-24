@@ -31,7 +31,6 @@ const CollectionsCategories = () => {
   const { data: collection } = useGetCollectionQuery({ collectionId });
   const { data, isLoading, error } = useGetCategoriesQuery({ collectionId });
   const [deleteCollection] = useDeleteCollectionMutation();
-  console.log(collection);
   const currentUser = collection?.users.find(
     (user) => user.userId === session?.user.id
   );
@@ -104,7 +103,6 @@ const CollectionsCategories = () => {
     },
   ];
 
-  console.log(session?.user.id === collection?.authorId);
   const renderCollection = () => {
     if (!data || data.length === 0) {
       return (

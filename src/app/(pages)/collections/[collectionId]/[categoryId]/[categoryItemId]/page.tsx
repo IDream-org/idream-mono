@@ -14,6 +14,9 @@ import Grid from "@mui/material/Grid";
 import RenderItem from "@/components/RenderItem/RenderItem";
 import BasicDialog from "@/components/BasicDialog/BasicDialog";
 import BasicSpeedDial from "@/components/BasicSpeedDial/BasicSpeedDial";
+import BackButton from "@/components/BackButton/BackButton";
+import WrapperComponent from "@/components/WrapperComponent/WrapperComponent";
+
 import { useAppDispatch } from "@/app/redux/hooks";
 import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
 import {
@@ -26,8 +29,6 @@ import {
   useDeleteCategoryItemMutation,
   useGetCategoryItemQuery,
 } from "@/app/redux/services/categoryItemApiSlice";
-import BackButton from "@/components/BackButton/BackButton";
-import WrapperComponent from "@/components/WrapperComponent/WrapperComponent";
 
 const CategoriesItems = () => {
   const { data: session } = useSession();

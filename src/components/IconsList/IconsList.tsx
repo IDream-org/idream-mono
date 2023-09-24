@@ -13,7 +13,6 @@ interface IconsListProps {
 
 const IconsList: React.FC<IconsListProps> = ({ data, setData }) => {
   const size = "3.5em";
-  console.log(data);
   const handleClick = (selectIcon: IconType) => {
     if (data.icons?.includes(selectIcon.name as Icons)) {
       const filteredIcons = data.icons.filter(

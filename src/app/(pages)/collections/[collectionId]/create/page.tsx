@@ -124,7 +124,8 @@ const CreateCategoryPage = () => {
                     alt={file}
                     width={500}
                     height={300}
-                    src={file}
+                    src={file ?? ""}
+                    quality={80}
                     style={{
                       overflow: "hidden",
                       width: "100%",

@@ -55,9 +55,9 @@ const RenderCollections: React.FC<RenderCollectionsProps> = ({
               alt={collection.title}
               width={0}
               height={0}
-              loading="lazy"
               sizes="100vw"
-              src={`${collection.image}`}
+              src={collection.image ?? ""}
+              quality={80}
               style={{
                 overflow: "hidden",
                 width: "100%",

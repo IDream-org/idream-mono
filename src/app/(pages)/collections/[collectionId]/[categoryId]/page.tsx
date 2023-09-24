@@ -95,7 +95,6 @@ const CategoriesData = () => {
       setItems(filteredItems);
     }
   };
-  console.log(currentUser);
 
   const actions = [
     {
@@ -180,9 +179,9 @@ const CategoriesData = () => {
                       <Image
                         height={500}
                         width={500}
-                        alt={item.image}
-                        src={item.image}
-                        loading="lazy"
+                        alt={item.image ?? ""}
+                        src={item.image ?? ""}
+                        quality={80}
                         style={{
                           width: "100%",
                           overflow: "hidden",

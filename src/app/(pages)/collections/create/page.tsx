@@ -128,7 +128,8 @@ const CreateCollectionPage = () => {
                     alt={file}
                     width={500}
                     height={300}
-                    src={file}
+                    quality={80}
+                    src={file ?? ""}
                     style={{
                       overflow: "hidden",
                       width: "100%",

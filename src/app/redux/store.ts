@@ -6,10 +6,16 @@ import { apiSlice } from "./services/apiSlice";
 import drawerSlice from "./features/drawerSlice";
 import snackbarSlice from "./features/snackbarSlice";
 
+const middlewares = [apiSlice.middleware];
+
+if (process.env.NODE_ENV !== "production") {
+  middlewares.push(logger);
+}
+
 export const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(logger, apiSlice.middleware),
+    getDefaultMiddleware().concat(...middlewares),
   reducer: {
     drawer: drawerSlice,
     snackbar: snackbarSlice,

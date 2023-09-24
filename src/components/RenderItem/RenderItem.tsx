@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ReactPlayer from "react-player";
@@ -78,21 +78,24 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
             {item.icons?.map((icon) => getIcons(icon))}
           </Grid>
           <Grid item height={500} xs={largeGrid} overflow={"hidden"}>
-            <Image
-              height={0}
-              width={0}
-              alt={item.image ?? ""}
-              src={item.image ?? ""}
-              loading="lazy"
-              sizes="100vw"
-              style={{
-                width: "100%",
-                height: "100%",
-                overflow: "hidden",
-                objectFit: "cover",
-                borderRadius: "20px",
-              }}
-            />
+            {item.image && (
+              <Image
+                height={0}
+                width={0}
+                alt={item.image}
+                src={item.image}
+                priority={true}
+                quality={80}
+                sizes="100vw"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  overflow: "hidden",
+                  objectFit: "cover",
+                  borderRadius: "20px",
+                }}
+              />
+            )}
           </Grid>
         </Grid>
         <Grid
