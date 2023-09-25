@@ -34,11 +34,15 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
-const Users = () => {
+const UsersTab = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
+  const theme = useTheme();
+  const mdSize = useMediaQuery(theme.breakpoints.down("md"));
   const { data: session } = useSession();
   const collectionId = String(params.collectionId);
   const {
@@ -178,7 +182,7 @@ const Users = () => {
           handleConfirm={() => {}}
           showButton={false}
         >
-          <Grid maxWidth={600} width={600} item xs={12}>
+          <Grid maxWidth={600} width={mdSize ? 350 : 600} item xs={12}>
             {notIncludedUsers && notIncludedUsers.length > 0 && (
               <Autocomplete
                 disablePortal
@@ -188,7 +192,12 @@ const Users = () => {
                     (user) => `${user.firstName} ${user.lastName}`
                   ) ?? []
                 }
-                sx={{ width: 400, pt: 2, pb: 4, margin: "0 auto" }}
+                sx={{
+                  width: mdSize ? "80%" : 400,
+                  pt: 2,
+                  pb: 4,
+                  margin: "0 auto",
+                }}
                 renderInput={(params) => (
                   <TextField {...params} label="Users" />
                 )}
@@ -235,7 +244,7 @@ const Users = () => {
           }}
           handleConfirm={handleEditUser}
         >
-          <Grid maxWidth={600} width={600} item xs={12}>
+          <Grid maxWidth={600} width={mdSize ? 350 : 600} item xs={12}>
             <Avatar
               src={openEditDialog.userToEdit?.avatar ?? ""}
               sx={{ margin: "0 auto", width: 70, height: 70 }}
@@ -300,11 +309,12 @@ const Users = () => {
 
   return (
     <WrapperComponent
+      loaderStyles={{ bottom: "30%" }}
       loading={isLoadingCollection || isLoadingUsers}
-      error={errorCollection || errorUsers}
+      error={errorCollection ?? errorUsers}
       component={renderUsers()}
     />
   );
 };
 
-export default Users;
+export default UsersTab;

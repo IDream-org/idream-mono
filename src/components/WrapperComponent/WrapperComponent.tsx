@@ -7,6 +7,7 @@ const WrapperComponent: React.FC<WrapperComponentProps> = ({
   loading,
   error,
   component,
+  loaderStyles,
 }) => {
   const renderComponent = () => {
     if (error) {
@@ -19,7 +20,7 @@ const WrapperComponent: React.FC<WrapperComponentProps> = ({
     return component;
   };
 
-  return loading ? <CenterLoading /> : renderComponent();
+  return loading ? <CenterLoading sx={loaderStyles} /> : renderComponent();
 };
 
 export default WrapperComponent;

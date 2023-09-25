@@ -36,9 +36,9 @@ const BasicRating: React.FC<BasicRatingProps> = ({
     <Box
       sx={{
         "& > legend": { mt: 2 },
-        width: width || 200,
+        width: width ?? 200,
         display: "flex",
-        justifyContent: justifyContent || "unset",
+        justifyContent: justifyContent ?? "unset",
         alignItems: "center",
       }}
     >
@@ -56,7 +56,7 @@ const BasicRating: React.FC<BasicRatingProps> = ({
         sx={{ ...sx }}
       />
       {value !== null && showLabel && (
-        <Box sx={{ ml: 2, width: boxWidth || "unset" }}>
+        <Box sx={{ ml: 2, width: boxWidth ?? "unset" }}>
           {labels[hover !== -1 ? hover : value]}
         </Box>
       )}

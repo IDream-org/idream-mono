@@ -28,7 +28,7 @@ const BasicDialog: React.FC<BasicDialogProps> = ({
         aria-describedby={`alert-dialog-${text}`}
       >
         <DialogTitle id={`alert-dialog-${title}`}>{title}</DialogTitle>
-        {children && children}
+        {children}
         <DialogContent>
           <DialogContentText id={`alert-dialog-${text}`}>
             {text}

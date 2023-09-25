@@ -10,7 +10,7 @@ const SearchAutoComplete: React.FC<SearchAutoCompleteProps> = ({
     <Stack spacing={2} sx={{ width: 300 }}>
       <Autocomplete
         freeSolo
-        id="free-solo-2-demo"
+        id="autocomplete"
         onChange={onChange}
         options={data.map((option) => option.title)}
         renderInput={(params) => (

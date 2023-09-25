@@ -15,7 +15,7 @@ import { useGetCollectionsQuery } from "@/app/redux/services/collectionsApiSilce
 
 const CollectionsPage = () => {
   const router = useRouter();
-  const { data, isLoading, error, status } = useGetCollectionsQuery({});
+  const { data, isLoading, error } = useGetCollectionsQuery({});
 
   const actions = [
     {

@@ -50,48 +50,6 @@ const CollectionsCategories = () => {
     await handleDelete();
   };
 
-  const actions = [
-    {
-      icon: (
-        <AddIcon
-          onClick={() => router.push(`/collections/${collectionId}/create`)}
-        />
-      ),
-      name: "Create",
-    },
-    {
-      icon: (
-        <SettingsIcon
-          onClick={() => router.push(`/collections/${collectionId}/settings`)}
-        />
-      ),
-      name: "Settings",
-    },
-    {
-      icon: <DeleteOutlineIcon onClick={() => setOpenDialog(true)} />,
-      name: "Delete",
-    },
-  ];
-
-  const ownerActions = [
-    {
-      icon: (
-        <AddIcon
-          onClick={() => router.push(`/collections/${collectionId}/create`)}
-        />
-      ),
-      name: "Create",
-    },
-    {
-      icon: (
-        <SettingsIcon
-          onClick={() => router.push(`/collections/${collectionId}/settings`)}
-        />
-      ),
-      name: "Settings",
-    },
-  ];
-
   const adminActions = [
     {
       icon: (
@@ -102,6 +60,40 @@ const CollectionsCategories = () => {
       name: "Create",
     },
   ];
+
+  const ownerActions = [
+    ...adminActions,
+    {
+      icon: (
+        <SettingsIcon
+          onClick={() => router.push(`/collections/${collectionId}/settings`)}
+        />
+      ),
+      name: "Settings",
+    },
+  ];
+  const authorActions = [
+    ...ownerActions,
+    {
+      icon: <DeleteOutlineIcon onClick={() => setOpenDialog(true)} />,
+      name: "Delete",
+    },
+  ];
+
+  const renderAuthorSpeedDial = () =>
+    session?.user.id === collection?.authorId && (
+      <BasicSpeedDial actions={authorActions} />
+    );
+
+  const renderOwnerSpeedDial = () =>
+    currentUser?.role === Roles.Owner && (
+      <BasicSpeedDial actions={ownerActions} />
+    );
+
+  const renderAdminSpeedDial = () =>
+    currentUser?.role === Roles.Admin && (
+      <BasicSpeedDial actions={adminActions} />
+    );
 
   const renderCollection = () => {
     if (!data || data.length === 0) {
@@ -114,15 +106,9 @@ const CollectionsCategories = () => {
           >
             Create new category
           </Button>
-          {currentUser?.role === Roles.Admin ? (
-            <BasicSpeedDial actions={adminActions} />
-          ) : currentUser?.role === Roles.Owner ? (
-            <BasicSpeedDial actions={ownerActions} />
-          ) : (
-            session?.user.id === collection?.authorId && (
-              <BasicSpeedDial actions={actions} />
-            )
-          )}
+          {renderOwnerSpeedDial()}
+          {renderAdminSpeedDial()}
+          {renderAuthorSpeedDial()}
           <BasicDialog
             title={`Delete ${collectionId}`}
             text="Are you sure you want to delete this category? All of its itens will be delete."
@@ -140,15 +126,9 @@ const CollectionsCategories = () => {
     return (
       <>
         <RenderCollections data={data} path="collections" />
-        {currentUser?.role === Roles.Admin ? (
-          <BasicSpeedDial actions={adminActions} />
-        ) : currentUser?.role === Roles.Owner ? (
-          <BasicSpeedDial actions={ownerActions} />
-        ) : (
-          session?.user.id === collection?.authorId && (
-            <BasicSpeedDial actions={actions} />
-          )
-        )}
+        {renderOwnerSpeedDial()}
+        {renderAdminSpeedDial()}
+        {renderAuthorSpeedDial()}
         <BasicDialog
           title={`Delete ${collectionId}`}
           text="Are you sure you want to delete this category? All of its itens will be delete."

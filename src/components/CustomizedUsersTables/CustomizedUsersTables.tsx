@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { CustomizedTablesProps } from "./CustomizedUsersTablesProps";
-import { Avatar, Grid } from "@mui/material";
+import { Avatar, Grid, useMediaQuery } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,11 +48,13 @@ const CustomizedTables: React.FC<CustomizedTablesProps> = ({
   columns,
   rows,
 }) => {
+  const theme = useTheme();
+  const mdSize = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <TableContainer sx={{ maxHeight: "900px" }} component={Paper}>
       <Table
         sx={{
-          minWidth: 700,
+          // minWidth: 700,
           "& .MuiTableCell-root:last-child": {
             textAlign: "center",
           },

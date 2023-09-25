@@ -1,7 +1,8 @@
-import { CircularProgress } from "@mui/material";
 import React from "react";
+import { CircularProgress } from "@mui/material";
+import { CenterLoadingProps } from "./CenterLoadingProps";
 
-const CenterLoading = () => {
+const CenterLoading: React.FC<CenterLoadingProps> = ({ sx }) => {
   return (
     <CircularProgress
       size={100}
@@ -11,6 +12,7 @@ const CenterLoading = () => {
         bottom: "50%",
         mt: "-50px",
         ml: "-50px",
+        ...sx,
       }}
     />
   );
