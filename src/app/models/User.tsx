@@ -7,9 +7,9 @@ export class User {
   private session: Session;
   error = new NextResponse();
   constructor(session: Session | null) {
-    // if (!session?.user) {
-    //   throw new NotAuthorizedError();
-    // }
+    if (!session?.user) {
+      throw new NotAuthorizedError();
+    }
     this.session = session;
   }
 
