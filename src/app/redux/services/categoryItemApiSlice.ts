@@ -1,6 +1,6 @@
-import { COLLECTIONS_URL } from "@/app/constants";
 import { apiSlice } from "./apiSlice";
-import { CategoryItems } from "@prisma/client";
+import { CategoryItems, ItemDesign } from "@prisma/client";
+import { CATEGORY_ITEMS_URL, CATEGORY_ITEM_URL } from "@/app/constants";
 
 interface GetCategoryItem {
   collectionId: string;
@@ -13,6 +13,7 @@ interface CreateCategoryItem {
   categoryId: string;
   categoryItemId: string | null;
   item: Partial<CategoryItems>;
+  itemDesign: ItemDesign;
 }
 
 interface AddCategoryItemComment {
@@ -33,7 +34,7 @@ interface DeleteCategoryItem {
 }
 
 const categoryItemApiTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["CategoryItems", "CategoryItem"],
+  addTagTypes: ["CategoryItems"],
 });
 
 export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
@@ -43,14 +44,14 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       { collectionId: string; categoryId: string }
     >({
       query: ({ categoryId, collectionId }) => ({
-        url: `${COLLECTIONS_URL}/categories/categoryItems?collectionId=${collectionId}&categoryId=${categoryId}`,
+        url: `${CATEGORY_ITEMS_URL}?collectionId=${collectionId}&categoryId=${categoryId}`,
         method: "GET",
       }),
       providesTags: ["CategoryItems"],
     }),
     getCategoryItem: builder.query<CategoryItems, GetCategoryItem>({
       query: ({ collectionId, categoryId, categoryItemId }) => ({
-        url: `${COLLECTIONS_URL}/categories/categoryItems/categoryItem?collectionId=${collectionId}&categoryId=${categoryId}${
+        url: `${CATEGORY_ITEM_URL}?collectionId=${collectionId}&categoryId=${categoryId}${
           categoryItemId ? `&categoryItemId=${categoryItemId}` : ""
         }`,
         method: "GET",
@@ -58,13 +59,20 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       providesTags: ["CategoryItem"],
     }),
     createCategoryItem: builder.mutation<CategoryItems, CreateCategoryItem>({
-      query: ({ item, collectionId, categoryId, categoryItemId }) => ({
-        url: `${COLLECTIONS_URL}/categories/categoryItems/categoryItem?collectionId=${collectionId}&categoryId=${categoryId}${
+      query: ({
+        item,
+        collectionId,
+        categoryId,
+        categoryItemId,
+        itemDesign,
+      }) => ({
+        url: `${CATEGORY_ITEM_URL}?collectionId=${collectionId}&categoryId=${categoryId}${
           categoryItemId ? `&categoryItemId=${categoryItemId}` : ""
         }`,
         method: "POST",
         body: {
           ...item,
+          itemDesign,
         },
       }),
       invalidatesTags: ["CategoryItems", "CategoryItem"],
@@ -75,7 +83,20 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       AddCategoryItemComment
     >({
       query: ({ collectionId, categoryItemId, comment }) => ({
-        url: `${COLLECTIONS_URL}/categories/categoryItems/categoryItem/review?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        url: `${CATEGORY_ITEM_URL}/review?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        method: "PUT",
+        body: {
+          comment,
+        },
+      }),
+      invalidatesTags: ["CategoryItem"],
+    }),
+    addCategoryItemNote: builder.mutation<
+      CategoryItems,
+      AddCategoryItemComment
+    >({
+      query: ({ collectionId, categoryItemId, comment }) => ({
+        url: `${CATEGORY_ITEM_URL}/notes?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
         method: "PUT",
         body: {
           comment,
@@ -88,20 +109,30 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       ChangeCategoryItemFavorite
     >({
       query: ({ collectionId, categoryItemId, done }) => ({
-        url: `${COLLECTIONS_URL}/categories/categoryItems/categoryItem/done?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        url: `${CATEGORY_ITEM_URL}/done?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
         method: "PUT",
         body: {
           done,
         },
       }),
-      invalidatesTags: ["CategoryItem", "CategoryItems"],
+      invalidatesTags: [
+        "CategoryItem",
+        "CategoryItems",
+        "CategoryItem",
+        "SubcategoryItem",
+        "SubSubcategoryItem",
+      ],
     }),
     deleteCategoryItem: builder.mutation<CategoryItems, DeleteCategoryItem>({
       query: ({ collectionId, categoryItemId }) => ({
-        url: `${COLLECTIONS_URL}/categories/categoryItems/categoryItem?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        url: `${CATEGORY_ITEM_URL}?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["CategoryItems"],
+      invalidatesTags: [
+        "CategoryItems",
+        "SubcategoryItem",
+        "SubSubcategoryItem",
+      ],
     }),
   }),
 });
@@ -111,6 +142,7 @@ export const {
   useGetCategoryItemQuery,
   useCreateCategoryItemMutation,
   useAddCategoryItemCommentMutation,
+  useAddCategoryItemNoteMutation,
   useChangeCategoryItemFavoriteMutation,
   useDeleteCategoryItemMutation,
 } = categoryItemApiSlice;

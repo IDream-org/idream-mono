@@ -80,7 +80,7 @@ const CreateCollectionPage = () => {
         sx={{
           ml: lgSize ? 0 : 8,
         }}
-        onClick={() => router.push(`/categories`)}
+        onClick={() => router.push(`/collections`)}
       >
         <KeyboardBackspaceIcon fontSize="large" />
       </Button>

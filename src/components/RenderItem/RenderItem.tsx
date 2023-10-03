@@ -309,6 +309,7 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
             display={"flex"}
             flexDirection={"column"}
             justifyContent={"space-between"}
+            sx={{ maxHeight: "300px" }}
           >
             <Grid
               item

@@ -45,16 +45,41 @@ model Collections {
     private    Boolean           @default(true)
 }
 
+model SubSubCategory {
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    title         String
+    createdAt     DateTime        @default(now())
+    image         String
+    notes         Notes[]
+    subCategoryId String          @db.ObjectId
+    subCategory   SubCategory     @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+    items         CategoryItems[]
+}
+
+model SubCategory {
+    id             String           @id @default(auto()) @map("_id") @db.ObjectId
+    title          String
+    createdAt      DateTime         @default(now())
+    image          String
+    notes          Notes[]
+    categoryId     String           @db.ObjectId
+    category       Categories       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    items          CategoryItems[]
+    subSubCategory SubSubCategory[]
+}
+
 model Categories {
     id            String          @id @default(auto()) @map("_id") @db.ObjectId
     title         String
     createdAt     DateTime        @default(now())
     image         String
     userId        String          @db.ObjectId
+    notes         Notes[]
     user          Users           @relation(fields: [userId], references: [id], onDelete: Cascade)
     items         CategoryItems[]
     collections   Collections     @relation(fields: [collectionsId], references: [id], onDelete: Cascade)
     collectionsId String          @db.ObjectId
+    subCategory   SubCategory[]
 }
 
 enum Icons {
@@ -107,19 +132,36 @@ type Comments {
     comment String
 }
 
+type Notes {
+    author  String
+    userId  String
+    comment String
+}
+
+enum ItemDesign {
+    Simple
+    Advanced
+}
+
 model CategoryItems {
-    id          String     @id @default(auto()) @map("_id") @db.ObjectId
-    title       String
-    image       String
-    video       String?
-    subtitle    String
-    description String
-    done        Boolean    @default(false)
-    icons       Icons[]
-    createdAt   DateTime   @default(now())
-    rating      Rating?
-    details     Json?
-    categoryId  String     @db.ObjectId
-    categories  Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-    comments    Comments[]
+    id               String          @id @default(auto()) @map("_id") @db.ObjectId
+    title            String
+    image            String
+    video            String?
+    subtitle         String
+    description      String
+    done             Boolean         @default(false)
+    icons            Icons[]
+    createdAt        DateTime        @default(now())
+    rating           Rating?
+    details          Json?
+    categoryId       String          @db.ObjectId
+    categories       Categories      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    comments         Comments[]
+    notes            Notes[]
+    subCategory      SubCategory?    @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+    subCategoryId    String?         @db.ObjectId
+    SubSubCategory   SubSubCategory? @relation(fields: [subSubCategoryId], references: [id], onDelete: Cascade)
+    subSubCategoryId String?         @db.ObjectId
+    itemDesign       ItemDesign      @default(Advanced)
 }

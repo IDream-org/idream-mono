@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { RenderCollectionsProps } from "./RenderCollectionsProps";
 import { useMediaQuery, useTheme } from "@mui/material";
 
@@ -16,18 +16,19 @@ const RenderCollections: React.FC<RenderCollectionsProps> = ({
   path,
 }) => {
   const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
   const theme = useTheme();
   const mdSize = useMediaQuery(theme.breakpoints.down("md"));
   const { open } = useAppSelector((state) => state.drawer);
 
+  const categoryId = String(params.categoryId);
+  const subcategoryId = searchParams.get("subcategoryId");
+
   const getImageSize = () => (mdSize ? "250px" : "300px");
 
   return (
-    <ImageList
-      gap={30}
-      cols={mdSize ? 1 : 2}
-      sx={{ justifyItems: "center", height: getImageSize() }}
-    >
+    <ImageList gap={30} cols={mdSize ? 1 : 2} sx={{ justifyItems: "center" }}>
       {(data || []).map((collection) => (
         <Grid
           height={getImageSize()}
@@ -44,7 +45,15 @@ const RenderCollections: React.FC<RenderCollectionsProps> = ({
               cursor: "pointer",
             }}
             onClick={() => {
-              collection.collectionsId
+              collection.subCategoryId
+                ? router.push(
+                    `/${path}/${categoryId}?subcategoryId=${subcategoryId}&subsubcategoryId=${collection.id}`
+                  )
+                : collection.categoryId
+                ? router.push(
+                    `/${path}/${collection.categoryId}?subcategoryId=${collection.id}`
+                  )
+                : collection.collectionsId
                 ? router.push(
                     `/${path}/${collection.collectionsId}/${collection.id}`
                   )

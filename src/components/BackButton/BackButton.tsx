@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { BackButtonProps } from "./BackButtonProps";
 
-const BackButton: React.FC<BackButtonProps> = ({ path }) => {
+const BackButton: React.FC<BackButtonProps> = ({ path, onClick }) => {
   const router = useRouter();
   const theme = useTheme();
   const lgSize = useMediaQuery(theme.breakpoints.down("lg"));
@@ -16,7 +16,7 @@ const BackButton: React.FC<BackButtonProps> = ({ path }) => {
       sx={{
         ml: lgSize ? 0 : 8,
       }}
-      onClick={() => router.push(path)}
+      onClick={onClick ? onClick : () => router.push(path)}
     >
       <KeyboardBackspaceIcon fontSize="large" />
     </Button>

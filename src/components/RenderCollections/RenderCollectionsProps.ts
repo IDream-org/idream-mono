@@ -3,6 +3,8 @@ interface Data {
   title: string;
   image: string;
   collectionsId?: string;
+  categoryId?: string;
+  subCategoryId?: string | null;
 }
 
 export interface RenderCollectionsProps {

@@ -1,12 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Roles } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-
-import AddIcon from "@mui/icons-material/Add";
-import SettingsIcon from "@mui/icons-material/Settings";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -21,6 +16,7 @@ import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
 import { useDeleteCollectionMutation } from "@/app/redux/services/collectionsApiSilce";
 import BackButton from "@/components/BackButton/BackButton";
 import BasicDialog from "@/components/BasicDialog/BasicDialog";
+import { UserActions } from "@/classes/UserActions";
 
 const CollectionsCategories = () => {
   const { data: session } = useSession();
@@ -29,11 +25,13 @@ const CollectionsCategories = () => {
   const collectionId = String(params.collectionId);
 
   const { data: collection } = useGetCollectionQuery({ collectionId });
-  const { data, isLoading, error } = useGetCategoriesQuery({ collectionId });
+  const {
+    data: category,
+    isLoading,
+    error,
+  } = useGetCategoriesQuery({ collectionId });
   const [deleteCollection] = useDeleteCollectionMutation();
-  const currentUser = collection?.users.find(
-    (user) => user.userId === session?.user.id
-  );
+  const actions = new UserActions(session, collection);
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -50,53 +48,8 @@ const CollectionsCategories = () => {
     await handleDelete();
   };
 
-  const adminActions = [
-    {
-      icon: (
-        <AddIcon
-          onClick={() => router.push(`/collections/${collectionId}/create`)}
-        />
-      ),
-      name: "Create",
-    },
-  ];
-
-  const ownerActions = [
-    ...adminActions,
-    {
-      icon: (
-        <SettingsIcon
-          onClick={() => router.push(`/collections/${collectionId}/settings`)}
-        />
-      ),
-      name: "Settings",
-    },
-  ];
-  const authorActions = [
-    ...ownerActions,
-    {
-      icon: <DeleteOutlineIcon onClick={() => setOpenDialog(true)} />,
-      name: "Delete",
-    },
-  ];
-
-  const renderAuthorSpeedDial = () =>
-    session?.user.id === collection?.authorId && (
-      <BasicSpeedDial actions={authorActions} />
-    );
-
-  const renderOwnerSpeedDial = () =>
-    currentUser?.role === Roles.Owner && (
-      <BasicSpeedDial actions={ownerActions} />
-    );
-
-  const renderAdminSpeedDial = () =>
-    currentUser?.role === Roles.Admin && (
-      <BasicSpeedDial actions={adminActions} />
-    );
-
   const renderCollection = () => {
-    if (!data || data.length === 0) {
+    if (!category || category.length === 0) {
       return (
         <Grid pt={"25%"} pb={"25%"} textAlign={"center"}>
           <Typography mb={5}>No Catagories found</Typography>
@@ -106,9 +59,14 @@ const CollectionsCategories = () => {
           >
             Create new category
           </Button>
-          {renderOwnerSpeedDial()}
-          {renderAdminSpeedDial()}
-          {renderAuthorSpeedDial()}
+          <BasicSpeedDial
+            actions={actions.getAuthorPrivilegesActions({
+              create: () => router.push(`/collections/${collectionId}/create`),
+              settings: () =>
+                router.push(`/collections/${collectionId}/settings`),
+              remove: () => setOpenDialog(true),
+            })}
+          />
           <BasicDialog
             title={`Delete ${collectionId}`}
             text="Are you sure you want to delete this category? All of its itens will be delete."
@@ -125,10 +83,15 @@ const CollectionsCategories = () => {
 
     return (
       <>
-        <RenderCollections data={data} path="collections" />
-        {renderOwnerSpeedDial()}
-        {renderAdminSpeedDial()}
-        {renderAuthorSpeedDial()}
+        <RenderCollections data={category} path="collections" />
+        <BasicSpeedDial
+          actions={actions.getAuthorPrivilegesActions({
+            create: () => router.push(`/collections/${collectionId}/create`),
+            settings: () =>
+              router.push(`/collections/${collectionId}/settings`),
+            remove: () => setOpenDialog(true),
+          })}
+        />
         <BasicDialog
           title={`Delete ${collectionId}`}
           text="Are you sure you want to delete this category? All of its itens will be delete."

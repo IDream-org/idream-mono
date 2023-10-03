@@ -1,6 +1,6 @@
 import { Collections, Roles } from "@prisma/client";
 import { apiSlice } from "./apiSlice";
-import { COLLECTION_URL } from "@/app/constants";
+import { COLECTION_USERS_URL, COLLECTION_URL } from "@/app/constants";
 
 const collectionApiTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Collection"],
@@ -22,7 +22,7 @@ export const collectionApiSlice = collectionApiTag.injectEndpoints({
       }
     >({
       query: ({ collectionId, user }) => ({
-        url: `${COLLECTION_URL}/users?collectionId=${collectionId}`,
+        url: `${COLECTION_USERS_URL}?collectionId=${collectionId}`,
         method: "PUT",
         body: {
           user,
@@ -38,7 +38,7 @@ export const collectionApiSlice = collectionApiTag.injectEndpoints({
       }
     >({
       query: ({ collectionId, userId }) => ({
-        url: `${COLLECTION_URL}/users?collectionId=${collectionId}`,
+        url: `${COLECTION_USERS_URL}?collectionId=${collectionId}`,
         method: "DELETE",
         body: {
           userId,
@@ -55,7 +55,7 @@ export const collectionApiSlice = collectionApiTag.injectEndpoints({
       }
     >({
       query: ({ collectionId, userId, userRole }) => ({
-        url: `${COLLECTION_URL}/users/role?collectionId=${collectionId}`,
+        url: `${COLECTION_USERS_URL}/role?collectionId=${collectionId}`,
         method: "PUT",
         body: {
           userId,

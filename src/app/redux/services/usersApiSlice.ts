@@ -9,7 +9,7 @@ const usersApiTag = apiSlice.enhanceEndpoints({
 export const usersApiSlice = usersApiTag.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query<Users[], {}>({
-      query: ({}) => ({
+      query: () => ({
         url: `${USERS_URL}`,
         method: "GET",
       }),

@@ -1,6 +1,9 @@
-import { COLLECTIONS_URL } from "@/app/constants";
 import { apiSlice } from "./apiSlice";
 import { Categories } from "@prisma/client";
+import {
+  COLLECTIONS_CATEGORIES_URL,
+  COLLECTIONS_CATEGORY_URL,
+} from "@/app/constants";
 
 interface CreateCategory {
   collectionId: string;
@@ -13,42 +16,70 @@ interface DeleteCategory {
   categoryId: string;
 }
 
+interface AddCategoryComment {
+  collectionId: string;
+  categoryId: string;
+  comment: string;
+}
+
 const categoriesApiTag = apiSlice.enhanceEndpoints({
-  addTagTypes: ["Category"],
+  addTagTypes: ["Categories", "Category"],
 });
 
 export const categoriesApiSlice = categoriesApiTag.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query<Categories[], { collectionId: string }>({
       query: ({ collectionId }) => ({
-        url: `${COLLECTIONS_URL}/categories?collectionId=${collectionId}`,
+        url: `${COLLECTIONS_CATEGORIES_URL}?collectionId=${collectionId}`,
+        method: "GET",
+      }),
+      providesTags: ["Categories"],
+    }),
+    getCategory: builder.query<
+      Categories,
+      { collectionId: string; categoryId: string }
+    >({
+      query: ({ collectionId, categoryId }) => ({
+        url: `${COLLECTIONS_CATEGORY_URL}?collectionId=${collectionId}&categoryId=${categoryId}`,
         method: "GET",
       }),
       providesTags: ["Category"],
     }),
     createCategory: builder.mutation<Categories, CreateCategory>({
       query: ({ collectionId, title, imageURL }) => ({
-        url: `${COLLECTIONS_URL}/categories?collectionId=${collectionId}`,
+        url: `${COLLECTIONS_CATEGORIES_URL}?collectionId=${collectionId}`,
         method: "POST",
         body: {
           title,
           image: imageURL,
         },
       }),
+      invalidatesTags: ["Categories"],
+    }),
+    addCategoryNote: builder.mutation<Categories, AddCategoryComment>({
+      query: ({ collectionId, categoryId, comment }) => ({
+        url: `${COLLECTIONS_CATEGORY_URL}/notes?collectionId=${collectionId}&categoryId=${categoryId}`,
+        method: "PUT",
+        body: {
+          comment,
+        },
+      }),
       invalidatesTags: ["Category"],
     }),
     deleteCategory: builder.mutation<Categories, DeleteCategory>({
       query: ({ collectionId, categoryId }) => ({
-        url: `${COLLECTIONS_URL}/categories?collectionId=${collectionId}&categoryId=${categoryId}`,
+        url: `${COLLECTIONS_CATEGORIES_URL}?collectionId=${collectionId}&categoryId=${categoryId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: ["Categories"],
     }),
   }),
 });
 
 export const {
   useGetCategoriesQuery,
+  useGetCategoryQuery,
   useCreateCategoryMutation,
+  useAddCategoryNoteMutation,
   useDeleteCategoryMutation,
 } = categoriesApiSlice;
