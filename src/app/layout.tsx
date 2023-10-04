@@ -10,8 +10,11 @@ import "./global.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Categories",
-  description: "Create your own categories",
+  title: "Collections",
+  description: "Create your own collections",
+  manifest: "/manifest.json",
+  icons: { apple: "/icon-192x192.png" },
+  themeColor: "#3573f6",
 };
 
 export default function RootLayout({

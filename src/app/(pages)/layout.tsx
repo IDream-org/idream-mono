@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { styled, useTheme } from "@mui/material/styles";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,6 +18,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
 
 import { LayoutProps } from "./LayoutProps";
 import { layoutItems, layoutSubItems } from "./LayoutItems";
@@ -77,6 +78,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { data: session } = useSession();
   const router = useRouter();
   const theme = useTheme();
   const dispatch = useAppDispatch();
@@ -95,8 +97,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar position="fixed" open={open}>
+        <Avatar
+          alt="Remy Sharp"
+          src={session?.user.avatar}
+          onClick={() => router.push("/profile")}
+          sx={{
+            position: "absolute",
+            top: 12,
+            right: 30,
+            margin: "auto",
+            marginBottom: 10,
+            cursor: "pointer",
+            zIndex: 10,
+          }}
+        />
         <MaterialUISwitch
-          sx={{ position: "absolute", right: 15, top: 15, zIndex: 10 }}
+          sx={{ position: "absolute", right: 80, top: 15, zIndex: 10 }}
           onChange={() => setMode(mode === "light" ? "dark" : "light")}
         />
         <Toolbar>
