@@ -35,6 +35,7 @@ const AddRating: React.FC<AddRatingProps> = ({ data, setData }) => {
       comments: [
         ...prev.comments!,
         {
+          id: "",
           comment,
           author: `${session?.user.firstName} ${session?.user.lastName}`,
           userId: session?.user.id ?? "",

@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Collections",
-  "short_name": "COL",
+  "name": "IDream",
+  "short_name": "IDream",
   "icons": [
     {
       "src": "/icon-192x192.png",

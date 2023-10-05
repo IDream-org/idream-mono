@@ -1,9 +1,11 @@
 import { prisma } from "../../server/db/client";
+import { v4 as uuid } from "uuid";
 import { AddCommentDto } from "../dto/categoryItems/AddCommentDto";
 import { CreateCategoryItemDto } from "../dto/categoryItems/CreateCategoryItemDto";
 import { CreateSubCategoryItemDto } from "../dto/categoryItems/CreateSubCategoryItemDto";
 import { CreateSubSubCategoryItemDto } from "../dto/categoryItems/CreateSubSubCategoryItemDto";
 import { UpdateCategoryItemDto } from "../dto/categoryItems/UpdateCategoryItemDto";
+import { Comments } from "@prisma/client";
 
 export class CategoryItem {
   static async getByCategoryId(categoryId: string) {
@@ -14,6 +16,12 @@ export class CategoryItem {
       include: {
         items: true,
       },
+    });
+  }
+
+  static async getById(categoryItemId: string) {
+    return await prisma.categoryItems.findFirst({
+      where: { id: categoryItemId },
     });
   }
 
@@ -192,12 +200,22 @@ export class CategoryItem {
         comments: {
           push: [
             {
+              id: uuid(),
               author,
               userId,
               comment,
             },
           ],
         },
+      },
+    });
+  }
+
+  static async removeComment(commentId: string, updatedComments: Comments[]) {
+    return await prisma.categoryItems.update({
+      where: { id: commentId },
+      data: {
+        notes: updatedComments,
       },
     });
   }
@@ -210,6 +228,7 @@ export class CategoryItem {
         notes: {
           push: [
             {
+              id: uuid(),
               author,
               userId,
               comment,

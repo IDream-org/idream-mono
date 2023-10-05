@@ -5,6 +5,8 @@ import { RequestValidationError } from "../models/RequestValidationError";
 import isNotMemberAuthorize from "../middlewares/isNotMemberAuthorize";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
+import { Collections } from "../providers/Collections";
+import { NotAuthorizedError } from "../models/NotAuthorizedError";
 
 const CategoryItemsServices = {
   getCategoryItemsByCategoryId: authorOrIncludedUserAuthorize(
@@ -269,6 +271,53 @@ const CategoryItemsServices = {
     }
   ),
 
+  removeCategoryItemComment: authorOrIncludedUserAuthorize(
+    async (request: NextRequest) => {
+      const { commentId } = await request.json();
+      const session = await getServerSession(authOptions);
+      const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
+      const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+      if (!categoryItemId || !commentId) {
+        return new RequestValidationError().send();
+      }
+
+      const collection = await Collections.getByCollectionId(collectionId!);
+
+      const categoryItem = await CategoryItem.getById(categoryItemId);
+
+      const commentToRemove = categoryItem?.comments.find(
+        (comment) => comment.id === commentId
+      );
+
+      if (!commentToRemove) {
+        return new RequestValidationError().send();
+      }
+
+      if (
+        !session?.user ||
+        (collection?.authorId !== session?.user.id &&
+          !collection?.users.some(
+            (userSome) => userSome.userId === session?.user.id
+          )) ||
+        commentToRemove.id !== session.user.id
+      ) {
+        return new NotAuthorizedError().send();
+      }
+
+      const updatedComments = categoryItem?.comments.filter(
+        (comment) => comment.id !== commentToRemove.id
+      );
+
+      const updatedCategoryItem = await CategoryItem.removeComment(
+        commentId,
+        updatedComments || []
+      );
+
+      return NextResponse.json(updatedCategoryItem);
+    }
+  ),
+
   updateCategoryItemToDone: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
       const { done } = await request.json();
@@ -306,6 +355,7 @@ export const {
   createSubSubCategoryItem,
   addCategoryItemComment,
   addCategoryItemNote,
+  removeCategoryItemComment,
   updateCategoryItemToDone,
   deleteCategoryItem,
 } = CategoryItemsServices;

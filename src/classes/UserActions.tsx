@@ -1,6 +1,6 @@
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
-import { Collections, Roles } from "@prisma/client";
+import { Collections, Comments, Roles } from "@prisma/client";
 
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -29,6 +29,19 @@ export class UserActions {
     if (!this.session?.user) {
       return new NextResponse("Not Authorized", { status: 401 });
     }
+  }
+
+  isAuthorOrOwnerOrCommentOwner(comment: Comments) {
+    const currentUser = this.collection?.users.find(
+      (user) => user.userId === this.session?.user.id
+    );
+    const isAuthorOrOwner =
+      this.session?.user.id === this.collection?.authorId ||
+      currentUser?.role === Roles.Owner;
+
+    const isCommentOwner = this.session?.user.id === comment.userId;
+
+    return isAuthorOrOwner || isCommentOwner;
   }
 
   getAuthorPrivilegesActions({ create, settings, remove }: GetActions) {

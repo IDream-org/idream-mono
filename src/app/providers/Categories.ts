@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { prisma } from "../../server/db/client";
 import { CreateCategoryDto } from "../dto/categories/CreateCategoryDto";
 import { AddCommentDto } from "../dto/categoryItems/AddCommentDto";
@@ -47,6 +48,7 @@ export class Categories {
         notes: {
           push: [
             {
+              id: uuid(),
               author,
               userId,
               comment,

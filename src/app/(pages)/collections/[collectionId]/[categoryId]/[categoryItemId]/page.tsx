@@ -171,7 +171,7 @@ const CategoriesItems = () => {
         return <DefaultPage item={item} setItems={setItems} />;
     }
   };
-  console.log(page);
+
   const renderComponent = () => {
     return (
       <>

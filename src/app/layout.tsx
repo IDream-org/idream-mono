@@ -10,7 +10,7 @@ import "./global.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Collections",
+  title: "IDream",
   description: "Create your own collections",
   manifest: "/manifest.json",
   icons: { apple: "/icon-192x192.png" },

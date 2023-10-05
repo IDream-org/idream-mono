@@ -9,6 +9,7 @@ import { CategoryItems } from "@prisma/client";
 import "./RenderItem.css";
 
 import SendIcon from "@mui/icons-material/Send";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -24,6 +25,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import BasicRating from "@/components/BasicRating/BasicRating";
 import { getIcons } from "@/components/IconsList/IconstArray";
 import { useGetUsersQuery } from "@/app/redux/services/usersApiSlice";
+import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
+import { useParams } from "next/navigation";
+import { UserActions } from "@/classes/UserActions";
 
 interface Comment {
   value: string;
@@ -38,11 +42,17 @@ export interface CategoriesItemsProps {
 
 const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
   const { data: session } = useSession();
+  const params = useParams();
+
+  const collectionId = String(params.collectionId);
   const theme = useTheme();
   const mdSize = useMediaQuery(theme.breakpoints.down("md"));
   const lgSize = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { data } = useGetUsersQuery({});
+  const { data: collection } = useGetCollectionQuery({ collectionId });
+
+  const userActions = new UserActions(session, collection);
 
   const largeGrid = lgSize ? 12 : 6;
   const largeGridSize = lgSize ? 10 : 8;
@@ -329,6 +339,9 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
                       primary={comment.author}
                       secondary={comment.comment}
                     />
+                    {userActions.isAuthorOrOwnerOrCommentOwner(comment) && (
+                      <DeleteOutlineIcon color="warning" />
+                    )}
                   </ListItem>
                 );
               })}
