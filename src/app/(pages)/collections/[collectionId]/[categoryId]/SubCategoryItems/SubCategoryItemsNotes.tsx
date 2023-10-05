@@ -26,18 +26,7 @@ import {
   useAddSubCategoryNoteMutation,
   useGetSubcategoryQuery,
 } from "@/app/redux/services/subcategoryApiSlice";
-
-function isValidHttpUrl(string: string) {
-  let url;
-
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
-  }
-
-  return url.protocol === "http:" || url.protocol === "https:";
-}
+import { getCommentValues } from "@/app/helpers/getCommentValues";
 
 const SubCategoryItemsNotes = () => {
   const { data: session } = useSession();
@@ -84,7 +73,7 @@ const SubCategoryItemsNotes = () => {
   };
 
   return (
-    <Grid container mt={lgSize ? 12 : 10} justifyContent={"center"}>
+    <Grid container mt={lgSize ? 5 : 10} justifyContent={"center"}>
       <Grid
         item
         xs={gridSize}
@@ -95,14 +84,13 @@ const SubCategoryItemsNotes = () => {
         <Grid item xs={largeGrid} sx={{ margin: "0 auto" }}>
           <Grid
             item
-            pt={lgSize ? 10 : 0}
             xs={12}
             display={"flex"}
             flexDirection={"column"}
             justifyContent={"space-between"}
             sx={{ maxHeight: "1200px" }}
           >
-            <Grid display={"flex"} alignItems={"center"} pb={10}>
+            <Grid display={"flex"} alignItems={"center"} pb={5}>
               <ListItemAvatar>
                 <Avatar alt="Profile Picture" src={session?.user.avatar} />
               </ListItemAvatar>
@@ -134,7 +122,7 @@ const SubCategoryItemsNotes = () => {
 
             <Grid
               item
-              height={lgSize ? "300px" : "unset"}
+              height={lgSize ? "450px" : "900px"}
               display={"flex"}
               flexDirection={"column"}
               overflow={"auto"}
@@ -151,20 +139,9 @@ const SubCategoryItemsNotes = () => {
                         />
                       </ListItemAvatar>
                       <ListItemText
+                        sx={{ wordBreak: "break-word" }}
                         primary={comment.author}
-                        secondary={
-                          isValidHttpUrl(comment.comment) ? (
-                            <Link
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              href={comment.comment}
-                            >
-                              {comment.comment}
-                            </Link>
-                          ) : (
-                            comment.comment
-                          )
-                        }
+                        secondary={getCommentValues(comment.comment)}
                       />
                     </ListItem>
                   );

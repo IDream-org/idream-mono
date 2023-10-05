@@ -11,7 +11,7 @@ const CollectionsServices = {
   getCategoriesByCollectionId: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
       const collectionId = request.nextUrl.searchParams.get("collectionId");
-
+      console.log("COLLECTION ID:", collectionId);
       if (!collectionId) {
         return new RequestValidationError().send();
       }
@@ -23,7 +23,7 @@ const CollectionsServices = {
   getCategoryById: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
       const categoryId = request.nextUrl.searchParams.get("categoryId");
-
+      console.log("CATEGORY ID:", categoryId);
       if (!categoryId) {
         return new RequestValidationError().send();
       }

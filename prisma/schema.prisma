@@ -130,14 +130,14 @@ type Comments {
     author  String
     userId  String
     comment String
-    id      String
+    id      String?
 }
 
 type Notes {
     author  String
     userId  String
     comment String
-    id      String
+    id      String?
 }
 
 enum ItemDesign {

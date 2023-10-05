@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "@mui/material/Link";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useAppDispatch } from "@/app/redux/hooks";
@@ -26,18 +25,7 @@ import {
   useAddCategoryNoteMutation,
   useGetCategoryQuery,
 } from "@/app/redux/services/categoriesApiSlice";
-
-function isValidHttpUrl(string: string) {
-  let url;
-
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
-  }
-
-  return url.protocol === "http:" || url.protocol === "https:";
-}
+import { getCommentValues } from "@/app/helpers/getCommentValues";
 
 const SubSubCategoryItemsNotesPage = () => {
   const { data: session } = useSession();
@@ -79,7 +67,7 @@ const SubSubCategoryItemsNotesPage = () => {
   };
 
   return (
-    <Grid container mt={lgSize ? 12 : 10} justifyContent={"center"}>
+    <Grid container mt={lgSize ? 5 : 10} justifyContent={"center"}>
       <Grid
         item
         xs={gridSize}
@@ -90,7 +78,6 @@ const SubSubCategoryItemsNotesPage = () => {
         <Grid item xs={largeGrid} sx={{ margin: "0 auto" }}>
           <Grid
             item
-            pt={lgSize ? 10 : 0}
             xs={12}
             display={"flex"}
             flexDirection={"column"}
@@ -129,7 +116,7 @@ const SubSubCategoryItemsNotesPage = () => {
 
             <Grid
               item
-              height={lgSize ? "300px" : "unset"}
+              height={lgSize ? "450px" : "900px"}
               display={"flex"}
               flexDirection={"column"}
               overflow={"auto"}
@@ -146,20 +133,9 @@ const SubSubCategoryItemsNotesPage = () => {
                         />
                       </ListItemAvatar>
                       <ListItemText
+                        sx={{ wordBreak: "break-word" }}
                         primary={comment.author}
-                        secondary={
-                          isValidHttpUrl(comment.comment) ? (
-                            <Link
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              href={comment.comment}
-                            >
-                              {comment.comment}
-                            </Link>
-                          ) : (
-                            comment.comment
-                          )
-                        }
+                        secondary={getCommentValues(comment.comment)}
                       />
                     </ListItem>
                   );
