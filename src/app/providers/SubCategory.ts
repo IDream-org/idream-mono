@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { prisma } from "../../server/db/client";
 import { AddCommentDto } from "../dto/categoryItems/AddCommentDto";
 import { CreateSubCategoryDto } from "../dto/subCategory.ts/CreateSubCategoryDto";
+import { Notes } from "@prisma/client";
 
 export class SubCategory {
   static async getByCategoryId(categoryId: string) {
@@ -58,6 +59,15 @@ export class SubCategory {
             },
           ],
         },
+      },
+    });
+  }
+
+  static async removeNote(subCategoryId: string, updatedNotes: Notes[]) {
+    return await prisma.subCategory.update({
+      where: { id: subCategoryId },
+      data: {
+        notes: updatedNotes,
       },
     });
   }

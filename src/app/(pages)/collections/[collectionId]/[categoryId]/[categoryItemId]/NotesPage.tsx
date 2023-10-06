@@ -7,6 +7,7 @@ import { CategoryItems } from "@prisma/client";
 import { useAppDispatch } from "@/app/redux/hooks";
 
 import SendIcon from "@mui/icons-material/Send";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -18,12 +19,17 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import InputAdornment from "@mui/material/InputAdornment";
 
 import { useGetUsersQuery } from "@/app/redux/services/usersApiSlice";
-import { useAddCategoryItemNoteMutation } from "@/app/redux/services/categoryItemApiSlice";
+import {
+  useAddCategoryItemNoteMutation,
+  useRemoveCategoryItemNoteMutation,
+} from "@/app/redux/services/categoryItemApiSlice";
 import {
   errorSnackbar,
   successSnackbar,
 } from "@/app/redux/features/snackbarSlice";
+import { UserActions } from "@/classes/UserActions";
 import { getCommentValues } from "@/app/helpers/getCommentValues";
+import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
 
 interface NotesPageProps {
   item: CategoryItems;
@@ -40,6 +46,9 @@ const NotesPage: React.FC<NotesPageProps> = ({ item, setItems }) => {
   const collectionId = String(params.collectionId);
 
   const { data } = useGetUsersQuery({});
+  const { data: collection } = useGetCollectionQuery({ collectionId });
+
+  const userActions = new UserActions(session, collection);
 
   const largeGrid = lgSize ? 12 : 10;
   const largeGridSize = lgSize ? 10 : 8;
@@ -47,6 +56,7 @@ const NotesPage: React.FC<NotesPageProps> = ({ item, setItems }) => {
   const flexDirection = lgSize ? "column" : "row";
 
   const [addCategoryItemNote] = useAddCategoryItemNoteMutation();
+  const [removeCategoryItemNote] = useRemoveCategoryItemNoteMutation();
 
   const [comment, setComment] = useState("");
 
@@ -63,8 +73,22 @@ const NotesPage: React.FC<NotesPageProps> = ({ item, setItems }) => {
       dispatch(successSnackbar({ message: "Message added successfully" }));
       setComment("");
     } catch (error) {
-      console.error("Failed adding comment");
-      dispatch(errorSnackbar({ message: "Failed to update item" }));
+      console.error("Failed removing message");
+      dispatch(errorSnackbar({ message: "Failed adding message" }));
+    }
+  };
+
+  const handleRemoveNote = async (noteId: string) => {
+    try {
+      await removeCategoryItemNote({
+        collectionId,
+        categoryItemId: item.id,
+        noteId,
+      }).unwrap();
+      dispatch(successSnackbar({ message: "Message removed successfully" }));
+    } catch (error) {
+      console.error("Failed adding message");
+      dispatch(errorSnackbar({ message: "Failed removing message" }));
     }
   };
 
@@ -123,8 +147,10 @@ const NotesPage: React.FC<NotesPageProps> = ({ item, setItems }) => {
               flexDirection={"column"}
               overflow={"auto"}
             >
-              {[...item.notes]?.reverse().map((comment, index) => {
-                const user = data?.find((user) => user.id === comment.userId);
+              {[...item.notes]?.reverse().map((itemComment, index) => {
+                const user = data?.find(
+                  (user) => user.id === itemComment.userId
+                );
                 return (
                   <ListItem key={index} button>
                     <ListItemAvatar>
@@ -132,9 +158,15 @@ const NotesPage: React.FC<NotesPageProps> = ({ item, setItems }) => {
                     </ListItemAvatar>
                     <ListItemText
                       sx={{ wordBreak: "break-word" }}
-                      primary={comment.author}
-                      secondary={getCommentValues(comment.comment)}
+                      primary={itemComment.author}
+                      secondary={getCommentValues(itemComment.comment)}
                     />
+                    {userActions.isAuthorOrOwnerOrCommentOwner(itemComment) && (
+                      <DeleteOutlineIcon
+                        color="warning"
+                        onClick={() => handleRemoveNote(itemComment.id)}
+                      />
+                    )}
                   </ListItem>
                 );
               })}

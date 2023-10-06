@@ -6,12 +6,13 @@ import { Categories } from "../providers/Categories";
 import { RequestValidationError } from "../models/RequestValidationError";
 import authorOrIncludedUserAuthorize from "../middlewares/authorOrIncludedUserAuthorize";
 import authorRoleAuthorize from "../middlewares/authorRoleAuthorize";
+import { Collections } from "../providers/Collections";
+import { NotAuthorizedError } from "../models/NotAuthorizedError";
 
 const CollectionsServices = {
   getCategoriesByCollectionId: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
       const collectionId = request.nextUrl.searchParams.get("collectionId");
-      console.log("COLLECTION ID:", collectionId);
       if (!collectionId) {
         return new RequestValidationError().send();
       }
@@ -23,7 +24,6 @@ const CollectionsServices = {
   getCategoryById: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
       const categoryId = request.nextUrl.searchParams.get("categoryId");
-      console.log("CATEGORY ID:", categoryId);
       if (!categoryId) {
         return new RequestValidationError().send();
       }
@@ -72,6 +72,48 @@ const CollectionsServices = {
       return NextResponse.json(updatedCategoryItem);
     }
   ),
+  removeCategoryNote: async (request: NextRequest) => {
+    const { noteId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const categoryId = request.nextUrl.searchParams.get("categoryId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!categoryId || !noteId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const category = await Categories.getByCategoryId(categoryId);
+
+    const noteToRemove = category?.notes.find((note) => note.id === noteId);
+
+    if (!noteToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            noteToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updateNotes = category?.notes.filter(
+      (comment) => comment.id !== noteToRemove.id
+    );
+
+    const updatedCategoryItem = await Categories.removeNote(
+      categoryId,
+      updateNotes || []
+    );
+
+    return NextResponse.json(updatedCategoryItem);
+  },
   deleteCtegoryById: authorRoleAuthorize(async (request: NextRequest) => {
     const categoryId = request.nextUrl.searchParams.get("categoryId");
 
@@ -90,5 +132,6 @@ export const {
   getCategoryById,
   createCategory,
   addCategoryNote,
+  removeCategoryNote,
   deleteCtegoryById,
 } = CollectionsServices;

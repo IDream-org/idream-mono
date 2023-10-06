@@ -72,6 +72,23 @@ export const subcategoryApiSlice = subsubcategoryApiTag.injectEndpoints({
       }),
       invalidatesTags: ["SubSubCategory"],
     }),
+    removeSubSubCategoryNote: builder.mutation<
+      SubSubCategory,
+      {
+        collectionId: string;
+        subsubcategoryId: string;
+        noteId: string;
+      }
+    >({
+      query: ({ collectionId, subsubcategoryId, noteId }) => ({
+        url: `${SUB_SUB_CATEGORY_URL}/notes?collectionId=${collectionId}&subsubcategoryId=${subsubcategoryId}`,
+        method: "DELETE",
+        body: {
+          noteId,
+        },
+      }),
+      invalidatesTags: ["SubSubCategory"],
+    }),
     deleteSubSubCategory: builder.mutation<
       SubSubCategory,
       { collectionId: string; subsubcategoryId: string }
@@ -90,5 +107,6 @@ export const {
   useGetSubSubCategoryQuery,
   useCreateSubSubCategoryMutation,
   useAddSubSubCategoryNoteMutation,
+  useRemoveSubSubCategoryNoteMutation,
   useDeleteSubSubCategoryMutation,
 } = subcategoryApiSlice;

@@ -88,7 +88,7 @@ const CollectionSettingsPage = () => {
     return (
       <>
         <BackButton path={`/collections/${collectionId}`} />
-        <Grid container mt={4} justifyContent={"center"}>
+        <Grid container justifyContent={"center"}>
           <Grid item xs={mdSize ? 12 : 10}>
             <Avatar
               alt="collection"

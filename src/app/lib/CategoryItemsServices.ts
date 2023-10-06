@@ -27,7 +27,6 @@ const CategoryItemsServices = {
       const categoryId = request.nextUrl.searchParams.get("categoryId");
       const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
 
-      console.log(categoryItemId);
       if (!categoryId || !categoryItemId) {
         return new RequestValidationError().send();
       }
@@ -271,52 +270,93 @@ const CategoryItemsServices = {
     }
   ),
 
-  removeCategoryItemComment: authorOrIncludedUserAuthorize(
-    async (request: NextRequest) => {
-      const { commentId } = await request.json();
-      const session = await getServerSession(authOptions);
-      const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
-      const collectionId = request.nextUrl.searchParams.get("collectionId");
+  removeCategoryItemComment: async (request: NextRequest) => {
+    const { commentId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
 
-      if (!categoryItemId || !commentId) {
-        return new RequestValidationError().send();
-      }
-
-      const collection = await Collections.getByCollectionId(collectionId!);
-
-      const categoryItem = await CategoryItem.getById(categoryItemId);
-
-      const commentToRemove = categoryItem?.comments.find(
-        (comment) => comment.id === commentId
-      );
-
-      if (!commentToRemove) {
-        return new RequestValidationError().send();
-      }
-
-      if (
-        !session?.user ||
-        (collection?.authorId !== session?.user.id &&
-          !collection?.users.some(
-            (userSome) => userSome.userId === session?.user.id
-          )) ||
-        commentToRemove.id !== session.user.id
-      ) {
-        return new NotAuthorizedError().send();
-      }
-
-      const updatedComments = categoryItem?.comments.filter(
-        (comment) => comment.id !== commentToRemove.id
-      );
-
-      const updatedCategoryItem = await CategoryItem.removeComment(
-        commentId,
-        updatedComments || []
-      );
-
-      return NextResponse.json(updatedCategoryItem);
+    if (!categoryItemId || !commentId) {
+      return new RequestValidationError().send();
     }
-  ),
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const categoryItem = await CategoryItem.getById(categoryItemId);
+
+    const commentToRemove = categoryItem?.comments.find(
+      (comment) => comment.id === commentId
+    );
+
+    if (!commentToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            commentToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updatedComments = categoryItem?.comments.filter(
+      (comment) => comment.id !== commentToRemove.id
+    );
+
+    const updatedCategoryItem = await CategoryItem.removeComment(
+      categoryItemId,
+      updatedComments || []
+    );
+
+    return NextResponse.json(updatedCategoryItem);
+  },
+
+  removeCategoryItemNote: async (request: NextRequest) => {
+    const { noteId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!categoryItemId || !noteId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const categoryItem = await CategoryItem.getById(categoryItemId);
+
+    const noteToRemove = categoryItem?.notes.find((note) => note.id === noteId);
+
+    if (!noteToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            noteToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updateNotes = categoryItem?.notes.filter(
+      (comment) => comment.id !== noteToRemove.id
+    );
+
+    const updatedCategoryItem = await CategoryItem.removeNote(
+      categoryItemId,
+      updateNotes || []
+    );
+
+    return NextResponse.json(updatedCategoryItem);
+  },
 
   updateCategoryItemToDone: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
@@ -356,6 +396,7 @@ export const {
   addCategoryItemComment,
   addCategoryItemNote,
   removeCategoryItemComment,
+  removeCategoryItemNote,
   updateCategoryItemToDone,
   deleteCategoryItem,
 } = CategoryItemsServices;

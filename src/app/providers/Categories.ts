@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { prisma } from "../../server/db/client";
 import { CreateCategoryDto } from "../dto/categories/CreateCategoryDto";
 import { AddCommentDto } from "../dto/categoryItems/AddCommentDto";
+import { Notes } from "@prisma/client";
 
 export class Categories {
   static async getByCollectionId(collectionId: string) {
@@ -55,6 +56,15 @@ export class Categories {
             },
           ],
         },
+      },
+    });
+  }
+
+  static async removeNote(categoryId: string, updatedNotes: Notes[]) {
+    return await prisma.categories.update({
+      where: { id: categoryId },
+      data: {
+        notes: updatedNotes,
       },
     });
   }

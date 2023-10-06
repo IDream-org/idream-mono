@@ -5,7 +5,7 @@ import { CreateCategoryItemDto } from "../dto/categoryItems/CreateCategoryItemDt
 import { CreateSubCategoryItemDto } from "../dto/categoryItems/CreateSubCategoryItemDto";
 import { CreateSubSubCategoryItemDto } from "../dto/categoryItems/CreateSubSubCategoryItemDto";
 import { UpdateCategoryItemDto } from "../dto/categoryItems/UpdateCategoryItemDto";
-import { Comments } from "@prisma/client";
+import { Comments, Notes } from "@prisma/client";
 
 export class CategoryItem {
   static async getByCategoryId(categoryId: string) {
@@ -215,7 +215,7 @@ export class CategoryItem {
     return await prisma.categoryItems.update({
       where: { id: commentId },
       data: {
-        notes: updatedComments,
+        comments: updatedComments,
       },
     });
   }
@@ -235,6 +235,15 @@ export class CategoryItem {
             },
           ],
         },
+      },
+    });
+  }
+
+  static async removeNote(noteId: string, updatedNotes: Notes[]) {
+    return await prisma.categoryItems.update({
+      where: { id: noteId },
+      data: {
+        notes: updatedNotes,
       },
     });
   }

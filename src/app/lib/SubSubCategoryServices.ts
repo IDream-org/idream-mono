@@ -5,6 +5,8 @@ import { SubSubCategory } from "../providers/SubSubCategory";
 import authorOrIncludedUserAuthorize from "../middlewares/authorOrIncludedUserAuthorize";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
+import { Collections } from "../providers/Collections";
+import { NotAuthorizedError } from "../models/NotAuthorizedError";
 
 const SubSubCategoryServices = {
   getSubSubCategoryById: authorOrIncludedUserAuthorize(
@@ -87,6 +89,52 @@ const SubSubCategoryServices = {
     }
   ),
 
+  removeSubSubCategoryNote: async (request: NextRequest) => {
+    const { noteId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const subsubcategoryId =
+      request.nextUrl.searchParams.get("subsubcategoryId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!subsubcategoryId || !noteId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const subSubCategory = await SubSubCategory.getById(subsubcategoryId);
+
+    const noteToRemove = subSubCategory?.notes.find(
+      (note) => note.id === noteId
+    );
+
+    if (!noteToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            noteToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updateNotes = subSubCategory?.notes.filter(
+      (comment) => comment.id !== noteToRemove.id
+    );
+
+    const updatedCategoryItem = await SubSubCategory.removeNote(
+      subsubcategoryId,
+      updateNotes || []
+    );
+
+    return NextResponse.json(updatedCategoryItem);
+  },
+
   deleteSubSubCategory: isNotMemberAuthorize(async (request: NextRequest) => {
     const subsubcategoryId =
       request.nextUrl.searchParams.get("subsubcategoryId");
@@ -106,5 +154,6 @@ export const {
   getSubSubCategory,
   createSubSubCategory,
   addSubSubCategoryNote,
+  removeSubSubCategoryNote,
   deleteSubSubCategory,
 } = SubSubCategoryServices;

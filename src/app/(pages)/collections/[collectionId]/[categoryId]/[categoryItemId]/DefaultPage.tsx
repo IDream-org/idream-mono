@@ -9,7 +9,10 @@ import {
   errorSnackbar,
   successSnackbar,
 } from "@/app/redux/features/snackbarSlice";
-import { useAddCategoryItemCommentMutation } from "@/app/redux/services/categoryItemApiSlice";
+import {
+  useAddCategoryItemCommentMutation,
+  useRemoveCategoryItemCommentMutation,
+} from "@/app/redux/services/categoryItemApiSlice";
 import RenderSimpleItem from "@/components/RenderSimpleItem/RenderSimpleItem";
 
 interface DefaultPageProps {
@@ -24,6 +27,7 @@ const DefaultPage: React.FC<DefaultPageProps> = ({ item, setItems }) => {
   const collectionId = String(params.collectionId);
 
   const [addCategoryItemComment] = useAddCategoryItemCommentMutation();
+  const [removeCategoryItemComment] = useRemoveCategoryItemCommentMutation();
 
   const [comment, setComment] = useState("");
 
@@ -45,6 +49,21 @@ const DefaultPage: React.FC<DefaultPageProps> = ({ item, setItems }) => {
     }
   };
 
+  const handlRemoveComment = async (commentId: string) => {
+    try {
+      await removeCategoryItemComment({
+        collectionId,
+        categoryItemId: item.id,
+        commentId,
+      }).unwrap();
+      dispatch(successSnackbar({ message: "Message removed successfully" }));
+      setComment("");
+    } catch (error) {
+      console.error("Failed removing comment");
+      dispatch(errorSnackbar({ message: "Failed to update item" }));
+    }
+  };
+
   return (
     <React.Fragment>
       {item.itemDesign === ItemDesign.Simple ? (
@@ -56,6 +75,7 @@ const DefaultPage: React.FC<DefaultPageProps> = ({ item, setItems }) => {
             value: comment,
             handleChange: setComment,
             handleAdd: handleAddComment,
+            handleRemove: handlRemoveComment,
           }}
         />
       )}

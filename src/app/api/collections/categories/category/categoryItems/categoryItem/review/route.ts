@@ -8,8 +8,8 @@ const apiHandler = {
   PUT: async (req: NextRequest, res: NextResponse) => {
     return await addCategoryItemComment(req, res);
   },
-  DELETE: async (req: NextRequest, res: NextResponse) => {
-    return await removeCategoryItemComment(req, res);
+  DELETE: async (req: NextRequest) => {
+    return await removeCategoryItemComment(req);
   },
 };
 

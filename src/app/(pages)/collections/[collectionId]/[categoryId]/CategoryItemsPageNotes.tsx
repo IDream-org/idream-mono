@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useAppDispatch } from "@/app/redux/hooks";
 
 import SendIcon from "@mui/icons-material/Send";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -24,8 +25,11 @@ import {
 import {
   useAddCategoryNoteMutation,
   useGetCategoryQuery,
+  useRemoveCategoryNoteMutation,
 } from "@/app/redux/services/categoriesApiSlice";
 import { getCommentValues } from "@/app/helpers/getCommentValues";
+import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
+import { UserActions } from "@/classes/UserActions";
 
 const SubSubCategoryItemsNotesPage = () => {
   const { data: session } = useSession();
@@ -39,6 +43,9 @@ const SubSubCategoryItemsNotesPage = () => {
 
   const { data } = useGetUsersQuery({});
   const { data: item } = useGetCategoryQuery({ collectionId, categoryId });
+  const { data: collection } = useGetCollectionQuery({ collectionId });
+
+  const userActions = new UserActions(session, collection);
 
   const largeGrid = lgSize ? 12 : 10;
   const largeGridSize = lgSize ? 10 : 8;
@@ -46,6 +53,7 @@ const SubSubCategoryItemsNotesPage = () => {
   const flexDirection = lgSize ? "column" : "row";
 
   const [addCategoryItemNote] = useAddCategoryNoteMutation();
+  const [removeCategoryItemNote] = useRemoveCategoryNoteMutation();
 
   const [comment, setComment] = useState("");
 
@@ -63,6 +71,20 @@ const SubSubCategoryItemsNotesPage = () => {
     } catch (error) {
       console.error("Failed adding comment");
       dispatch(errorSnackbar({ message: "Failed to update item" }));
+    }
+  };
+
+  const handleRemoveNote = async (noteId: string) => {
+    try {
+      await removeCategoryItemNote({
+        collectionId,
+        categoryId,
+        noteId,
+      }).unwrap();
+      dispatch(successSnackbar({ message: "Message removed successfully" }));
+    } catch (error) {
+      console.error("Failed adding message");
+      dispatch(errorSnackbar({ message: "Failed removing message" }));
     }
   };
 
@@ -122,8 +144,10 @@ const SubSubCategoryItemsNotesPage = () => {
               overflow={"auto"}
             >
               {item &&
-                [...item.notes]?.reverse().map((comment, index) => {
-                  const user = data?.find((user) => user.id === comment.userId);
+                [...item.notes]?.reverse().map((itemComment, index) => {
+                  const user = data?.find(
+                    (user) => user.id === itemComment.userId
+                  );
                   return (
                     <ListItem key={index} button>
                       <ListItemAvatar>
@@ -134,9 +158,17 @@ const SubSubCategoryItemsNotesPage = () => {
                       </ListItemAvatar>
                       <ListItemText
                         sx={{ wordBreak: "break-word" }}
-                        primary={comment.author}
-                        secondary={getCommentValues(comment.comment)}
+                        primary={itemComment.author}
+                        secondary={getCommentValues(itemComment.comment)}
                       />
+                      {userActions.isAuthorOrOwnerOrCommentOwner(
+                        itemComment
+                      ) && (
+                        <DeleteOutlineIcon
+                          color="warning"
+                          onClick={() => handleRemoveNote(itemComment.id)}
+                        />
+                      )}
                     </ListItem>
                   );
                 })}

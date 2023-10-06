@@ -5,6 +5,8 @@ import { SubCategory } from "../providers/SubCategory";
 import isNotMemberAuthorize from "../middlewares/isNotMemberAuthorize";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
+import { Collections } from "../providers/Collections";
+import { NotAuthorizedError } from "../models/NotAuthorizedError";
 
 const SubCategoryServices = {
   getSubCategoryById: authorOrIncludedUserAuthorize(
@@ -83,6 +85,49 @@ const SubCategoryServices = {
     }
   ),
 
+  removeSubCategoryNote: async (request: NextRequest) => {
+    const { noteId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const subCategoryId = request.nextUrl.searchParams.get("subCategoryId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!subCategoryId || !noteId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const subCategory = await SubCategory.getById(subCategoryId);
+
+    const noteToRemove = subCategory?.notes.find((note) => note.id === noteId);
+
+    if (!noteToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            noteToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updateNotes = subCategory?.notes.filter(
+      (comment) => comment.id !== noteToRemove.id
+    );
+
+    const updatedCategoryItem = await SubCategory.removeNote(
+      subCategoryId,
+      updateNotes || []
+    );
+
+    return NextResponse.json(updatedCategoryItem);
+  },
+
   deleteSubCategory: isNotMemberAuthorize(async (request: NextRequest) => {
     const subCategoryId = request.nextUrl.searchParams.get("subCategoryId");
 
@@ -101,5 +146,6 @@ export const {
   getSubCategoryByCategoryId,
   createSubCategory,
   addSubCategoryNote,
+  removeSubCategoryNote,
   deleteSubCategory,
 } = SubCategoryServices;

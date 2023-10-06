@@ -66,6 +66,23 @@ export const categoriesApiSlice = categoriesApiTag.injectEndpoints({
       }),
       invalidatesTags: ["Category"],
     }),
+    removeCategoryNote: builder.mutation<
+      Categories,
+      {
+        collectionId: string;
+        categoryId: string;
+        noteId: string;
+      }
+    >({
+      query: ({ collectionId, categoryId, noteId }) => ({
+        url: `${COLLECTIONS_CATEGORY_URL}/notes?collectionId=${collectionId}&categoryId=${categoryId}`,
+        method: "DELETE",
+        body: {
+          noteId,
+        },
+      }),
+      invalidatesTags: ["Category"],
+    }),
     deleteCategory: builder.mutation<Categories, DeleteCategory>({
       query: ({ collectionId, categoryId }) => ({
         url: `${COLLECTIONS_CATEGORIES_URL}?collectionId=${collectionId}&categoryId=${categoryId}`,
@@ -81,5 +98,6 @@ export const {
   useGetCategoryQuery,
   useCreateCategoryMutation,
   useAddCategoryNoteMutation,
+  useRemoveCategoryNoteMutation,
   useDeleteCategoryMutation,
 } = categoriesApiSlice;

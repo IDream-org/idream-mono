@@ -33,6 +33,7 @@ interface Comment {
   value: string;
   handleAdd: () => void;
   handleChange: React.Dispatch<React.SetStateAction<string>>;
+  handleRemove?: (comentId: string) => void;
 }
 
 export interface CategoriesItemsProps {
@@ -328,19 +329,24 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
               flexDirection={"column"}
               overflow={"auto"}
             >
-              {item.comments?.map((comment, index) => {
-                const user = data?.find((user) => user.id === comment.userId);
+              {item.comments?.map((itemComment, index) => {
+                const user = data?.find(
+                  (user) => user.id === itemComment.userId
+                );
                 return (
                   <ListItem key={index} button>
                     <ListItemAvatar>
                       <Avatar alt="Profile Picture" src={user?.avatar ?? ""} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={comment.author}
-                      secondary={comment.comment}
+                      primary={itemComment.author}
+                      secondary={itemComment.comment}
                     />
-                    {userActions.isAuthorOrOwnerOrCommentOwner(comment) && (
-                      <DeleteOutlineIcon color="warning" />
+                    {userActions.isAuthorOrOwnerOrCommentOwner(itemComment) && (
+                      <DeleteOutlineIcon
+                        color="warning"
+                        onClick={() => comment?.handleRemove!(itemComment.id!)}
+                      />
                     )}
                   </ListItem>
                 );

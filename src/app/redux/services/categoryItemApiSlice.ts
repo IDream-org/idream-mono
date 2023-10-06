@@ -91,6 +91,23 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       }),
       invalidatesTags: ["CategoryItem"],
     }),
+    removeCategoryItemComment: builder.mutation<
+      CategoryItems,
+      {
+        collectionId: string;
+        categoryItemId: string;
+        commentId: string;
+      }
+    >({
+      query: ({ collectionId, categoryItemId, commentId }) => ({
+        url: `${CATEGORY_ITEM_URL}/review?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        method: "DELETE",
+        body: {
+          commentId,
+        },
+      }),
+      invalidatesTags: ["CategoryItem"],
+    }),
     addCategoryItemNote: builder.mutation<
       CategoryItems,
       AddCategoryItemComment
@@ -100,6 +117,23 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
         method: "PUT",
         body: {
           comment,
+        },
+      }),
+      invalidatesTags: ["CategoryItem"],
+    }),
+    removeCategoryItemNote: builder.mutation<
+      CategoryItems,
+      {
+        collectionId: string;
+        categoryItemId: string;
+        noteId: string;
+      }
+    >({
+      query: ({ collectionId, categoryItemId, noteId }) => ({
+        url: `${CATEGORY_ITEM_URL}/notes?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        method: "DELETE",
+        body: {
+          noteId,
         },
       }),
       invalidatesTags: ["CategoryItem"],
@@ -143,6 +177,8 @@ export const {
   useCreateCategoryItemMutation,
   useAddCategoryItemCommentMutation,
   useAddCategoryItemNoteMutation,
+  useRemoveCategoryItemCommentMutation,
+  useRemoveCategoryItemNoteMutation,
   useChangeCategoryItemFavoriteMutation,
   useDeleteCategoryItemMutation,
 } = categoryItemApiSlice;
