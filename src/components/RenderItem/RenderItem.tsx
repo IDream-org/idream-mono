@@ -62,7 +62,7 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
 
   return (
     <>
-      <Grid container mt={lgSize ? 5 : 10} justifyContent={"center"}>
+      <Grid container justifyContent={"center"}>
         <Grid
           item
           xs={gridSize}

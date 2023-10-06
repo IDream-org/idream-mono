@@ -62,7 +62,7 @@ const RenderCollectionItem: React.FC<RenderCollectionItemProps> = ({
   };
 
   return (
-    <Grid container mt={4} justifyContent={"center"}>
+    <Grid container justifyContent={"center"}>
       <Grid item xs={lgSize ? 12 : 10}>
         <Grid
           item

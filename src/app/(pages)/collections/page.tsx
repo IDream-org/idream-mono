@@ -49,7 +49,7 @@ const CollectionsPage = () => {
 
   return (
     <React.Fragment>
-      <Grid container mt={4} display={"flex"} justifyContent={"center"}>
+      <Grid container display={"flex"} justifyContent={"center"}>
         <Grid item xs={12} lg={10}>
           <WrapperComponent
             loading={isLoading}

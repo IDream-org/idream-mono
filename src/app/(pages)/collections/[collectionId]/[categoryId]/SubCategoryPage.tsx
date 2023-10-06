@@ -103,7 +103,7 @@ const SubCategoryPage = () => {
     return (
       <>
         <BackButton path={`/collections/${collectionId}`} />
-        <Grid container mt={4} display={"flex"} justifyContent={"center"}>
+        <Grid container display={"flex"} justifyContent={"center"}>
           <Grid item xs={12} lg={10}>
             <RenderCollections
               data={subcategory}

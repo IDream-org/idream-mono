@@ -26,7 +26,7 @@ const RenderSimpleItem: React.FC<CategoriesItemsProps> = ({ item }) => {
 
   return (
     <>
-      <Grid container mt={lgSize ? 5 : 10} justifyContent={"center"}>
+      <Grid container justifyContent={"center"}>
         <Grid
           item
           xs={gridSize}

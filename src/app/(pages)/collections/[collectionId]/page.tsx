@@ -109,7 +109,7 @@ const CollectionsCategories = () => {
   return (
     <React.Fragment>
       <BackButton path="/collections" />
-      <Grid container mt={4} display={"flex"} justifyContent={"center"}>
+      <Grid container display={"flex"} justifyContent={"center"}>
         <Grid item xs={12} lg={10}>
           <WrapperComponent
             loading={isLoading}
