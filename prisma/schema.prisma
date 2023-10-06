@@ -140,6 +140,13 @@ type Notes {
     id      String
 }
 
+type Photos {
+    author String
+    userId String
+    image  String
+    id     String
+}
+
 enum ItemDesign {
     Simple
     Advanced
@@ -161,6 +168,7 @@ model CategoryItems {
     categories       Categories      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     comments         Comments[]
     notes            Notes[]
+    photos           Photos[]
     subCategory      SubCategory?    @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
     subCategoryId    String?         @db.ObjectId
     SubSubCategory   SubSubCategory? @relation(fields: [subSubCategoryId], references: [id], onDelete: Cascade)

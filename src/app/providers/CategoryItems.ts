@@ -5,7 +5,8 @@ import { CreateCategoryItemDto } from "../dto/categoryItems/CreateCategoryItemDt
 import { CreateSubCategoryItemDto } from "../dto/categoryItems/CreateSubCategoryItemDto";
 import { CreateSubSubCategoryItemDto } from "../dto/categoryItems/CreateSubSubCategoryItemDto";
 import { UpdateCategoryItemDto } from "../dto/categoryItems/UpdateCategoryItemDto";
-import { Comments, Notes } from "@prisma/client";
+import { Comments, Notes, Photos } from "@prisma/client";
+import { AddPhotoDto } from "../dto/categoryItems/AddPhotoDto";
 
 export class CategoryItem {
   static async getByCategoryId(categoryId: string) {
@@ -244,6 +245,34 @@ export class CategoryItem {
       where: { id: noteId },
       data: {
         notes: updatedNotes,
+      },
+    });
+  }
+
+  static async addPhoto(addPhotoDto: AddPhotoDto) {
+    const { id, image, userId, author } = addPhotoDto;
+    return await prisma.categoryItems.update({
+      where: { id },
+      data: {
+        photos: {
+          push: [
+            {
+              id: uuid(),
+              author,
+              userId,
+              image,
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  static async removePhoto(photoId: string, updatedPhotos: Photos[]) {
+    return await prisma.categoryItems.update({
+      where: { id: photoId },
+      data: {
+        photos: updatedPhotos,
       },
     });
   }

@@ -20,6 +20,7 @@ import Users from "./Users";
 import BackButton from "@/components/BackButton/BackButton";
 import WrapperComponent from "@/components/WrapperComponent/WrapperComponent";
 import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
+import Settings from "./Settings";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -145,7 +146,7 @@ const CollectionSettingsPage = () => {
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
-                Settings
+                <Settings />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
                 <Users />

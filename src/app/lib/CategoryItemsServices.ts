@@ -358,6 +358,72 @@ const CategoryItemsServices = {
     return NextResponse.json(updatedCategoryItem);
   },
 
+  addCategoryItemPhoto: authorOrIncludedUserAuthorize(
+    async (request: NextRequest) => {
+      const { image } = await request.json();
+      const session = await getServerSession(authOptions);
+      const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
+
+      if (!categoryItemId || !image) {
+        return new RequestValidationError().send();
+      }
+
+      const updatedCategoryItem = await CategoryItem.addPhoto({
+        id: categoryItemId,
+        author: `${session!.user.firstName} ${session!.user.lastName}`,
+        userId: session!.user.id,
+        image,
+      });
+
+      return NextResponse.json(updatedCategoryItem);
+    }
+  ),
+
+  removeCategoryItemPhoto: async (request: NextRequest) => {
+    const { photoId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const categoryItemId = request.nextUrl.searchParams.get("categoryItemId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!categoryItemId || !photoId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const categoryItem = await CategoryItem.getById(categoryItemId);
+
+    const photoToRemove = categoryItem?.photos.find(
+      (photo) => photo.id === photoId
+    );
+
+    if (!photoToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            photoToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updatedPhotos = categoryItem?.photos.filter(
+      (photo) => photo.id !== photoToRemove.id
+    );
+
+    const updatedCategoryItem = await CategoryItem.removePhoto(
+      categoryItemId,
+      updatedPhotos || []
+    );
+
+    return NextResponse.json(updatedCategoryItem);
+  },
+
   updateCategoryItemToDone: authorOrIncludedUserAuthorize(
     async (request: NextRequest) => {
       const { done } = await request.json();
@@ -397,6 +463,8 @@ export const {
   addCategoryItemNote,
   removeCategoryItemComment,
   removeCategoryItemNote,
+  addCategoryItemPhoto,
+  removeCategoryItemPhoto,
   updateCategoryItemToDone,
   deleteCategoryItem,
 } = CategoryItemsServices;

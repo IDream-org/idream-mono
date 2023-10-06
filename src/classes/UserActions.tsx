@@ -1,6 +1,6 @@
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
-import { Collections, Comments, Roles } from "@prisma/client";
+import { Collections, Comments, Photos, Roles } from "@prisma/client";
 
 import AddIcon from "@mui/icons-material/Add";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -40,6 +40,19 @@ export class UserActions {
       currentUser?.role === Roles.Owner;
 
     const isCommentOwner = this.session?.user.id === comment.userId;
+
+    return isAuthorOrOwner || isCommentOwner;
+  }
+
+  isAuthorOrOwnerOrPhotoOwner(photo: Photos) {
+    const currentUser = this.collection?.users.find(
+      (user) => user.userId === this.session?.user.id
+    );
+    const isAuthorOrOwner =
+      this.session?.user.id === this.collection?.authorId ||
+      currentUser?.role === Roles.Owner;
+
+    const isCommentOwner = this.session?.user.id === photo.userId;
 
     return isAuthorOrOwner || isCommentOwner;
   }

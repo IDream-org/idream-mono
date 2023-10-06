@@ -166,7 +166,7 @@ const CategoriesItems = () => {
       case Page.NOTES:
         return <NotesPage item={item} setItems={setItems} />;
       case Page.GALLRY:
-        return <GalleryPage />;
+        return <GalleryPage item={item} />;
       default:
         return <DefaultPage item={item} setItems={setItems} />;
     }

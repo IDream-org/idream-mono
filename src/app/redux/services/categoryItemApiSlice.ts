@@ -22,6 +22,12 @@ interface AddCategoryItemComment {
   comment: string;
 }
 
+interface AddCategoryItemPhoto {
+  collectionId: string;
+  categoryItemId: string;
+  image: string;
+}
+
 interface ChangeCategoryItemFavorite {
   collectionId: string;
   categoryItemId: string;
@@ -138,6 +144,35 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       }),
       invalidatesTags: ["CategoryItem"],
     }),
+    addCategoryItemPhoto: builder.mutation<CategoryItems, AddCategoryItemPhoto>(
+      {
+        query: ({ collectionId, categoryItemId, image }) => ({
+          url: `${CATEGORY_ITEM_URL}/photos?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+          method: "PUT",
+          body: {
+            image,
+          },
+        }),
+        invalidatesTags: ["CategoryItem"],
+      }
+    ),
+    removeCategoryItemPhoto: builder.mutation<
+      CategoryItems,
+      {
+        collectionId: string;
+        categoryItemId: string;
+        photoId: string;
+      }
+    >({
+      query: ({ collectionId, categoryItemId, photoId }) => ({
+        url: `${CATEGORY_ITEM_URL}/photos?collectionId=${collectionId}&categoryItemId=${categoryItemId}`,
+        method: "DELETE",
+        body: {
+          photoId,
+        },
+      }),
+      invalidatesTags: ["CategoryItem"],
+    }),
     changeCategoryItemFavorite: builder.mutation<
       CategoryItems,
       ChangeCategoryItemFavorite
@@ -179,6 +214,8 @@ export const {
   useAddCategoryItemNoteMutation,
   useRemoveCategoryItemCommentMutation,
   useRemoveCategoryItemNoteMutation,
+  useAddCategoryItemPhotoMutation,
+  useRemoveCategoryItemPhotoMutation,
   useChangeCategoryItemFavoriteMutation,
   useDeleteCategoryItemMutation,
 } = categoryItemApiSlice;
