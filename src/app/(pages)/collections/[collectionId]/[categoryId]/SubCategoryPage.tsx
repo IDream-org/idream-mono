@@ -113,7 +113,7 @@ const SubCategoryPage = () => {
               actions={actions.getAuthorAndOwnerPrivilegesActions({
                 create: () =>
                   router.push(
-                    `/collections/${collectionId}/create?categoryId=${categoryId}`
+                    `/collections/${collectionId}/create?categoryId=${categoryId}&categoryExists=${true}`
                   ),
                 remove: () => setOpenDialog(true),
               })}
