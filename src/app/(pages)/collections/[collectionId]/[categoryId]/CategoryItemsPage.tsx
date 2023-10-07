@@ -20,6 +20,7 @@ import RenderCollectionItem from "@/components/RenderCollectionItem/RenderCollec
 import { Page } from "@/app/models/Page";
 import { CategoryItems } from "@prisma/client";
 import CategoryItemsPageNotes from "./CategoryItemsPageNotes";
+import CategoryItemsPageGallary from "./CategoryItemsPageGallary";
 
 const CategoryItemsPage = () => {
   const { data: session } = useSession();
@@ -69,7 +70,7 @@ const CategoryItemsPage = () => {
       case Page.NOTES:
         return <CategoryItemsPageNotes />;
       case Page.GALLRY:
-      // return <GalleryPage />;
+        return <CategoryItemsPageGallary />;
       default:
         return (
           <RenderCollectionItem
@@ -79,6 +80,7 @@ const CategoryItemsPage = () => {
         );
     }
   };
+  console.log(page);
 
   const renderCategoryItems = () => {
     if (!categoryItems || categoryItems.length === 0) {
@@ -136,6 +138,7 @@ const CategoryItemsPage = () => {
               ),
             remove: () => setOpenDialog(true),
             notes: () => setPage(Page.NOTES),
+            gallery: () => setPage(Page.GALLRY),
           })}
         />
         <BasicDialog

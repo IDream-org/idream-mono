@@ -2,7 +2,8 @@ import { v4 as uuid } from "uuid";
 import { prisma } from "../../server/db/client";
 import { AddCommentDto } from "../dto/categoryItems/AddCommentDto";
 import { CreateSubCategoryDto } from "../dto/subCategory.ts/CreateSubCategoryDto";
-import { Notes } from "@prisma/client";
+import { Notes, Photos } from "@prisma/client";
+import { AddPhotoDto } from "../dto/categoryItems/AddPhotoDto";
 
 export class SubCategory {
   static async getByCategoryId(categoryId: string) {
@@ -59,6 +60,34 @@ export class SubCategory {
             },
           ],
         },
+      },
+    });
+  }
+
+  static async addPhoto(addPhotoDto: AddPhotoDto) {
+    const { id, image, userId, author } = addPhotoDto;
+    return await prisma.subCategory.update({
+      where: { id },
+      data: {
+        photos: {
+          push: [
+            {
+              id: uuid(),
+              author,
+              userId,
+              image,
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  static async removePhoto(photoId: string, updatedPhotos: Photos[]) {
+    return await prisma.subCategory.update({
+      where: { id: photoId },
+      data: {
+        photos: updatedPhotos,
       },
     });
   }

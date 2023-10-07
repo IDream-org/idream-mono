@@ -22,6 +22,7 @@ import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
 import { useGetSubSubcategoryItemQuery } from "@/app/redux/services/subsubcategoryItemApiSlice";
 import RenderCollectionItem from "@/components/RenderCollectionItem/RenderCollectionItem";
 import SubSubCategoryItemsNotesPage from "./SubSubCategoryItemsNotesPage";
+import SubSubCategoryItemsGalleryPage from "./SubSubCategoryItemsGalleryPage";
 
 enum Page {
   DEFAULT,
@@ -41,10 +42,6 @@ const SubSubCategoryItems = () => {
 
   const { data: collection } = useGetCollectionQuery({ collectionId });
   const [deleteSubSubCategory] = useDeleteSubSubCategoryMutation();
-  const { data: subSubCategory } = useGetSubSubCategoriesQuery({
-    collectionId,
-    subCategoryId: subcategoryId ?? "",
-  });
   const {
     data: subSubcategoryItem,
     isLoading: isLoadingSubSubCategoryItems,
@@ -90,7 +87,7 @@ const SubSubCategoryItems = () => {
       case Page.NOTES:
         return <SubSubCategoryItemsNotesPage />;
       case Page.GALLRY:
-      // return <GalleryPage />;
+        return <SubSubCategoryItemsGalleryPage />;
       default:
         return (
           <RenderCollectionItem
@@ -161,6 +158,7 @@ const SubSubCategoryItems = () => {
               ),
             remove: () => setOpenDialog(true),
             notes: () => setPage(Page.NOTES),
+            gallery: () => setPage(Page.GALLRY),
           })}
         />
         <BasicDialog

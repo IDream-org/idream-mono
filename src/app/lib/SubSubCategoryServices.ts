@@ -135,6 +135,74 @@ const SubSubCategoryServices = {
     return NextResponse.json(updatedCategoryItem);
   },
 
+  addSubSubCategoryPhoto: authorOrIncludedUserAuthorize(
+    async (request: NextRequest) => {
+      const { image } = await request.json();
+      const session = await getServerSession(authOptions);
+      const subsubcategoryId =
+        request.nextUrl.searchParams.get("subsubcategoryId");
+
+      if (!subsubcategoryId || !image) {
+        return new RequestValidationError().send();
+      }
+
+      const updatedCategory = await SubSubCategory.addPhoto({
+        id: subsubcategoryId,
+        author: `${session!.user.firstName} ${session!.user.lastName}`,
+        userId: session!.user.id,
+        image,
+      });
+
+      return NextResponse.json(updatedCategory);
+    }
+  ),
+
+  removeSubSubCategoryPhoto: async (request: NextRequest) => {
+    const { photoId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const subsubcategoryId =
+      request.nextUrl.searchParams.get("subsubcategoryId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!subsubcategoryId || !photoId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const category = await SubSubCategory.getById(subsubcategoryId);
+
+    const photoToRemove = category?.photos.find(
+      (photo) => photo.id === photoId
+    );
+
+    if (!photoToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            photoToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updatedPhotos = category?.photos.filter(
+      (photo) => photo.id !== photoToRemove.id
+    );
+
+    const updatedSubSubCategoryItem = await SubSubCategory.removePhoto(
+      subsubcategoryId,
+      updatedPhotos || []
+    );
+
+    return NextResponse.json(updatedSubSubCategoryItem);
+  },
+
   deleteSubSubCategory: isNotMemberAuthorize(async (request: NextRequest) => {
     const subsubcategoryId =
       request.nextUrl.searchParams.get("subsubcategoryId");
@@ -155,5 +223,7 @@ export const {
   createSubSubCategory,
   addSubSubCategoryNote,
   removeSubSubCategoryNote,
+  addSubSubCategoryPhoto,
+  removeSubSubCategoryPhoto,
   deleteSubSubCategory,
 } = SubSubCategoryServices;

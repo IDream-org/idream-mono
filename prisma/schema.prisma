@@ -51,6 +51,7 @@ model SubSubCategory {
     createdAt     DateTime        @default(now())
     image         String
     notes         Notes[]
+    photos        Photos[]
     subCategoryId String          @db.ObjectId
     subCategory   SubCategory     @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
     items         CategoryItems[]
@@ -62,6 +63,7 @@ model SubCategory {
     createdAt      DateTime         @default(now())
     image          String
     notes          Notes[]
+    photos         Photos[]
     categoryId     String           @db.ObjectId
     category       Categories       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     items          CategoryItems[]
@@ -75,6 +77,7 @@ model Categories {
     image         String
     userId        String          @db.ObjectId
     notes         Notes[]
+    photos        Photos[]
     user          Users           @relation(fields: [userId], references: [id], onDelete: Cascade)
     items         CategoryItems[]
     collections   Collections     @relation(fields: [collectionsId], references: [id], onDelete: Cascade)

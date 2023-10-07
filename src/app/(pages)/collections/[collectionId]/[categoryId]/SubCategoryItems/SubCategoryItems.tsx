@@ -22,6 +22,7 @@ import SubSubCategoryItems from "./SubSubCategoryItems/SubSubCategoryItems";
 import RenderCollectionItem from "@/components/RenderCollectionItem/RenderCollectionItem";
 import { Page } from "@/app/models/Page";
 import SubCategoryItemsNotes from "./SubCategoryItemsNotes";
+import SubCategoryItemsGallery from "./SubCategoryItemsGallery";
 
 const SubCategoryItems = () => {
   const { data: session } = useSession();
@@ -85,7 +86,7 @@ const SubCategoryItems = () => {
       case Page.NOTES:
         return <SubCategoryItemsNotes />;
       case Page.GALLRY:
-      // return <GalleryPage />;
+        return <SubCategoryItemsGallery />;
       default:
         return (
           <RenderCollectionItem
@@ -197,6 +198,7 @@ const SubCategoryItems = () => {
               ),
             remove: () => setOpenDialog(true),
             notes: () => setPage(Page.NOTES),
+            gallery: () => setPage(Page.GALLRY),
           })}
         />
         <BasicDialog

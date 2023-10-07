@@ -22,6 +22,12 @@ interface AddCategoryComment {
   comment: string;
 }
 
+interface AddCategoryPhoto {
+  collectionId: string;
+  categoryId: string;
+  image: string;
+}
+
 const categoriesApiTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["Categories", "Category"],
 });
@@ -83,6 +89,33 @@ export const categoriesApiSlice = categoriesApiTag.injectEndpoints({
       }),
       invalidatesTags: ["Category"],
     }),
+    addCategoryPhoto: builder.mutation<Categories, AddCategoryPhoto>({
+      query: ({ collectionId, categoryId, image }) => ({
+        url: `${COLLECTIONS_CATEGORY_URL}/photos?collectionId=${collectionId}&categoryId=${categoryId}`,
+        method: "PUT",
+        body: {
+          image,
+        },
+      }),
+      invalidatesTags: ["Category"],
+    }),
+    removeCategoryPhoto: builder.mutation<
+      Categories,
+      {
+        collectionId: string;
+        categoryId: string;
+        photoId: string;
+      }
+    >({
+      query: ({ collectionId, categoryId, photoId }) => ({
+        url: `${COLLECTIONS_CATEGORY_URL}/photos?collectionId=${collectionId}&categoryId=${categoryId}`,
+        method: "DELETE",
+        body: {
+          photoId,
+        },
+      }),
+      invalidatesTags: ["Category"],
+    }),
     deleteCategory: builder.mutation<Categories, DeleteCategory>({
       query: ({ collectionId, categoryId }) => ({
         url: `${COLLECTIONS_CATEGORIES_URL}?collectionId=${collectionId}&categoryId=${categoryId}`,
@@ -99,5 +132,7 @@ export const {
   useCreateCategoryMutation,
   useAddCategoryNoteMutation,
   useRemoveCategoryNoteMutation,
+  useAddCategoryPhotoMutation,
+  useRemoveCategoryPhotoMutation,
   useDeleteCategoryMutation,
 } = categoriesApiSlice;

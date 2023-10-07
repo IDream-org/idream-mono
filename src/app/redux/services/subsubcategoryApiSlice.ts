@@ -8,6 +8,12 @@ interface AddSubSubCategoryComment {
   comment: string;
 }
 
+interface AddSubSubCategoryPhoto {
+  collectionId: string;
+  subsubcategoryId: string;
+  image: string;
+}
+
 const subsubcategoryApiTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["SubSubCategories", "SubSubCategory"],
 });
@@ -89,6 +95,36 @@ export const subcategoryApiSlice = subsubcategoryApiTag.injectEndpoints({
       }),
       invalidatesTags: ["SubSubCategory"],
     }),
+    addSubSubCategoryPhoto: builder.mutation<
+      SubSubCategory,
+      AddSubSubCategoryPhoto
+    >({
+      query: ({ collectionId, subsubcategoryId, image }) => ({
+        url: `${SUB_SUB_CATEGORY_URL}/photos?collectionId=${collectionId}&subsubcategoryId=${subsubcategoryId}`,
+        method: "PUT",
+        body: {
+          image,
+        },
+      }),
+      invalidatesTags: ["SubSubCategory"],
+    }),
+    removeSubSubCategoryPhoto: builder.mutation<
+      SubSubCategory,
+      {
+        collectionId: string;
+        subsubcategoryId: string;
+        photoId: string;
+      }
+    >({
+      query: ({ collectionId, subsubcategoryId, photoId }) => ({
+        url: `${SUB_SUB_CATEGORY_URL}/photos?collectionId=${collectionId}&subsubcategoryId=${subsubcategoryId}`,
+        method: "DELETE",
+        body: {
+          photoId,
+        },
+      }),
+      invalidatesTags: ["SubSubCategory"],
+    }),
     deleteSubSubCategory: builder.mutation<
       SubSubCategory,
       { collectionId: string; subsubcategoryId: string }
@@ -108,5 +144,7 @@ export const {
   useCreateSubSubCategoryMutation,
   useAddSubSubCategoryNoteMutation,
   useRemoveSubSubCategoryNoteMutation,
+  useAddSubSubCategoryPhotoMutation,
+  useRemoveSubSubCategoryPhotoMutation,
   useDeleteSubSubCategoryMutation,
 } = subcategoryApiSlice;

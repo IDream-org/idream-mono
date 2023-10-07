@@ -2,7 +2,8 @@ import { v4 as uuid } from "uuid";
 import { prisma } from "../../server/db/client";
 import { CreateCategoryDto } from "../dto/categories/CreateCategoryDto";
 import { AddCommentDto } from "../dto/categoryItems/AddCommentDto";
-import { Notes } from "@prisma/client";
+import { Notes, Photos } from "@prisma/client";
+import { AddPhotoDto } from "../dto/categoryItems/AddPhotoDto";
 
 export class Categories {
   static async getByCollectionId(collectionId: string) {
@@ -65,6 +66,34 @@ export class Categories {
       where: { id: categoryId },
       data: {
         notes: updatedNotes,
+      },
+    });
+  }
+
+  static async addPhoto(addPhotoDto: AddPhotoDto) {
+    const { id, image, userId, author } = addPhotoDto;
+    return await prisma.categories.update({
+      where: { id },
+      data: {
+        photos: {
+          push: [
+            {
+              id: uuid(),
+              author,
+              userId,
+              image,
+            },
+          ],
+        },
+      },
+    });
+  }
+
+  static async removePhoto(photoId: string, updatedPhotos: Photos[]) {
+    return await prisma.categories.update({
+      where: { id: photoId },
+      data: {
+        photos: updatedPhotos,
       },
     });
   }

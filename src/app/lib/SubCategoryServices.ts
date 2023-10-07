@@ -74,14 +74,14 @@ const SubCategoryServices = {
         return new RequestValidationError().send();
       }
 
-      const updatedCategoryItem = await SubCategory.addNote({
+      const updatedSunCategory = await SubCategory.addNote({
         id: subCategoryId,
         author: `${session!.user.firstName} ${session!.user.lastName}`,
         userId: session!.user.id,
         comment,
       });
 
-      return NextResponse.json(updatedCategoryItem);
+      return NextResponse.json(updatedSunCategory);
     }
   ),
 
@@ -120,12 +120,78 @@ const SubCategoryServices = {
       (comment) => comment.id !== noteToRemove.id
     );
 
-    const updatedCategoryItem = await SubCategory.removeNote(
+    const updatedSunCategory = await SubCategory.removeNote(
       subCategoryId,
       updateNotes || []
     );
 
-    return NextResponse.json(updatedCategoryItem);
+    return NextResponse.json(updatedSunCategory);
+  },
+
+  addSubCategoryPhoto: authorOrIncludedUserAuthorize(
+    async (request: NextRequest) => {
+      const { image } = await request.json();
+      const session = await getServerSession(authOptions);
+      const subCategoryId = request.nextUrl.searchParams.get("subCategoryId");
+
+      if (!subCategoryId || !image) {
+        return new RequestValidationError().send();
+      }
+
+      const updatedSubCategory = await SubCategory.addPhoto({
+        id: subCategoryId,
+        author: `${session!.user.firstName} ${session!.user.lastName}`,
+        userId: session!.user.id,
+        image,
+      });
+
+      return NextResponse.json(updatedSubCategory);
+    }
+  ),
+
+  removeSubCategoryPhoto: async (request: NextRequest) => {
+    const { photoId } = await request.json();
+    const session = await getServerSession(authOptions);
+    const subCategoryId = request.nextUrl.searchParams.get("subCategoryId");
+    const collectionId = request.nextUrl.searchParams.get("collectionId");
+
+    if (!subCategoryId || !photoId) {
+      return new RequestValidationError().send();
+    }
+
+    const collection = await Collections.getByCollectionId(collectionId!);
+    const subCategoryById = await SubCategory.getById(subCategoryId);
+
+    const noteToRemove = subCategoryById?.photos.find(
+      (note) => note.id === photoId
+    );
+
+    if (!noteToRemove) {
+      return new RequestValidationError().send();
+    }
+
+    if (
+      !session?.user ||
+      (collection?.authorId !== session?.user.id &&
+        !collection?.users.some(
+          (userSome) =>
+            userSome.userId === session?.user.id &&
+            noteToRemove.id !== session.user.id
+        ))
+    ) {
+      return new NotAuthorizedError().send();
+    }
+
+    const updatePhotos = subCategoryById?.photos.filter(
+      (comment) => comment.id !== noteToRemove.id
+    );
+
+    const updatedSubCategory = await SubCategory.removePhoto(
+      subCategoryId,
+      updatePhotos || []
+    );
+
+    return NextResponse.json(updatedSubCategory);
   },
 
   deleteSubCategory: isNotMemberAuthorize(async (request: NextRequest) => {
@@ -147,5 +213,7 @@ export const {
   createSubCategory,
   addSubCategoryNote,
   removeSubCategoryNote,
+  addSubCategoryPhoto,
+  removeSubCategoryPhoto,
   deleteSubCategory,
 } = SubCategoryServices;
