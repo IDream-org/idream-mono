@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Create your own collections",
   manifest: "/manifest.json",
   icons: { apple: "/icon-192x192.png" },
-  themeColor: "#3573f6",
+  themeColor: "#1976d2",
 };
 
 export default function RootLayout({
