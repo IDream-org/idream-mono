@@ -5,18 +5,15 @@ import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 
-const ProgressMobileStepper: React.FC<ProgressMobileStepperProps> = ({
-  activeStep,
-  setActiveStep,
-  checkRequired,
-  handleCreate,
-}) => {
+const SimpleProgressMobileStepper: React.FC<
+  SimpleProgressMobileStepperProps
+> = ({ activeStep, setActiveStep, checkRequired, handleCreate }) => {
   const theme = useTheme();
 
   const handleNext = async () => {
     const requiredItems = checkRequired();
     if (!requiredItems) return;
-    if (activeStep === 5) {
+    if (activeStep === 3) {
       await handleCreate();
       return;
     }
@@ -31,13 +28,13 @@ const ProgressMobileStepper: React.FC<ProgressMobileStepperProps> = ({
   return (
     <MobileStepper
       variant="progress"
-      steps={6}
+      steps={4}
       position="static"
       activeStep={activeStep}
       sx={{ flexGrow: 1, pb: 5 }}
       nextButton={
-        <Button size="small" onClick={handleNext} disabled={activeStep === 6}>
-          {activeStep === 5 ? "Create" : "Next"}
+        <Button size="small" onClick={handleNext} disabled={activeStep === 4}>
+          {activeStep === 3 ? "Create" : "Next"}
           {theme.direction === "rtl" ? (
             <KeyboardArrowLeft />
           ) : (
@@ -59,4 +56,4 @@ const ProgressMobileStepper: React.FC<ProgressMobileStepperProps> = ({
   );
 };
 
-export default ProgressMobileStepper;
+export default SimpleProgressMobileStepper;

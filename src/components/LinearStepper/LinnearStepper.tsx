@@ -18,7 +18,7 @@ const LinearStepper: React.FC<LinearStepperProps> = ({
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const isStepOptional = (step: number) => {
-    return step === 1 || step === 2 || step === 4 || step === 5;
+    return step === 1 || step === 2 || step === 3 || step === 4;
   };
 
   const isStepSkipped = (step: number) => {
@@ -28,7 +28,7 @@ const LinearStepper: React.FC<LinearStepperProps> = ({
   const handleNext = async () => {
     const requiredItems = checkRequired();
     if (!requiredItems) return;
-    if (activeStep === 6) {
+    if (activeStep === 5) {
       await handleCreate();
       return;
     }

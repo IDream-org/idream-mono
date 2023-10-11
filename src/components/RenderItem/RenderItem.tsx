@@ -28,6 +28,7 @@ import { useGetUsersQuery } from "@/app/redux/services/usersApiSlice";
 import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
 import { useParams } from "next/navigation";
 import { UserActions } from "@/classes/UserActions";
+import { defaultImage } from "@/app/helpers/defaultImage";
 
 interface Comment {
   value: string;
@@ -89,24 +90,22 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
             {item.icons?.map((icon) => getIcons(icon))}
           </Grid>
           <Grid item height={500} xs={largeGrid} overflow={"hidden"}>
-            {item.image && (
-              <Image
-                height={0}
-                width={0}
-                alt={item.image}
-                src={item.image}
-                priority={true}
-                quality={80}
-                sizes="100vw"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  overflow: "hidden",
-                  objectFit: "cover",
-                  borderRadius: "20px",
-                }}
-              />
-            )}
+            <Image
+              height={0}
+              width={0}
+              alt={item.image || defaultImage}
+              src={item.image || defaultImage}
+              priority={true}
+              quality={80}
+              sizes="100vw"
+              style={{
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
+                objectFit: "cover",
+                borderRadius: "20px",
+              }}
+            />
           </Grid>
         </Grid>
         <Grid

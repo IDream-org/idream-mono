@@ -30,6 +30,8 @@ import { useCreateSubSubcategoryItemMutation } from "@/app/redux/services/subsub
 import SelectItemDesign from "./SelectItemDesign";
 import SimpleLinearStepper from "@/components/SimpleLinearStepper/SimpleLinearStepper";
 import SimpleReview from "./SimpleReview";
+import { defaultImage } from "@/app/helpers/defaultImage";
+import SimpleProgressMobileStepper from "@/components/SimpleProgressMobileStepper/SimpleProgressMobileStepper";
 
 const steps = [
   "Details",
@@ -37,7 +39,6 @@ const steps = [
   "Icons",
   "Image",
   "Video",
-  "Rating",
   "Review",
 ];
 
@@ -145,7 +146,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
         const { url } = await uploadImage(filesToUpload).unwrap();
         imageURL = url.split("?")[0];
       } else {
-        imageURL = data.image;
+        imageURL = data.image || defaultImage;
       }
 
       if (subsubcategoryId && subcategoryId) {
@@ -157,7 +158,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
           categoryItemId,
           item: {
             ...data,
-            image: imageURL,
+            image: imageURL || defaultImage,
             categoryId,
           },
           itemDesign,
@@ -174,7 +175,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
           categoryItemId,
           item: {
             ...data,
-            image: imageURL,
+            image: imageURL || defaultImage,
             categoryId,
           },
           itemDesign,
@@ -190,7 +191,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
           categoryItemId,
           item: {
             ...data,
-            image: imageURL,
+            image: imageURL || defaultImage,
             categoryId,
           },
           itemDesign,
@@ -234,8 +235,6 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
       case 4:
         return <AddVideo data={data} setData={setData} />;
       case 5:
-        return <AddRating data={data} setData={setData} />;
-      case 6:
         return <Review data={data} setData={setData} />;
       default:
         return null;
@@ -284,13 +283,6 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
           return false;
         }
         return true;
-
-      case 3:
-        if (!file) {
-          dispatch(errorSnackbar({ message: "Please select an image" }));
-          return false;
-        }
-        return true;
       default:
         return true;
     }
@@ -304,13 +296,6 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
           dispatch(
             errorSnackbar({ message: "Please fill all required informations" })
           );
-          return false;
-        }
-        return true;
-
-      case 2:
-        if (!file) {
-          dispatch(errorSnackbar({ message: "Please select an image" }));
           return false;
         }
         return true;
@@ -350,15 +335,29 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
       />
       <Grid container mt={4} justifyContent={"center"}>
         <Grid item xs={lgSize ? 12 : 10}>
-          <SimpleLinearStepper
-            steps={simpleSteps}
-            activeStep={activeStep}
-            setActiveStep={setActiveStep}
-            checkRequired={checkSimpleRequired}
-            handleCreate={handleCreate}
-          >
-            {getSimpleStep()}
-          </SimpleLinearStepper>
+          {lgSize ? (
+            <>
+              <SimpleProgressMobileStepper
+                activeStep={activeStep}
+                setActiveStep={setActiveStep}
+                checkRequired={checkSimpleRequired}
+                handleCreate={handleCreate}
+              />
+              {getSimpleStep()}
+            </>
+          ) : (
+            <>
+              <SimpleLinearStepper
+                steps={simpleSteps}
+                activeStep={activeStep}
+                setActiveStep={setActiveStep}
+                checkRequired={checkSimpleRequired}
+                handleCreate={handleCreate}
+              >
+                {getSimpleStep()}
+              </SimpleLinearStepper>
+            </>
+          )}
         </Grid>
       </Grid>
     </>
@@ -393,13 +392,12 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
         <Grid item xs={lgSize ? 12 : 10}>
           {lgSize ? (
             <>
-              {" "}
               <ProgressMobileStepper
                 activeStep={activeStep}
                 setActiveStep={setActiveStep}
                 checkRequired={checkRequired}
                 handleCreate={handleCreate}
-              />{" "}
+              />
               {getStep()}
             </>
           ) : (

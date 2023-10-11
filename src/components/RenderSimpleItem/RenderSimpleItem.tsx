@@ -9,6 +9,7 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import { defaultImage } from "@/app/helpers/defaultImage";
 
 export interface CategoriesItemsProps {
   item: Partial<CategoryItems>;
@@ -79,24 +80,22 @@ const RenderSimpleItem: React.FC<CategoriesItemsProps> = ({ item }) => {
             </Grid>
           </Grid>
           <Grid item height={500} xs={largeGrid} overflow={"hidden"}>
-            {item.image && (
-              <Image
-                height={0}
-                width={0}
-                alt={item.image}
-                src={item.image}
-                priority={true}
-                quality={80}
-                sizes="100vw"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  overflow: "hidden",
-                  objectFit: "cover",
-                  borderRadius: "20px",
-                }}
-              />
-            )}
+            <Image
+              height={0}
+              width={0}
+              alt={item.image || defaultImage}
+              src={item.image || defaultImage}
+              priority={true}
+              quality={80}
+              sizes="100vw"
+              style={{
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
+                objectFit: "cover",
+                borderRadius: "20px",
+              }}
+            />
           </Grid>
         </Grid>
       </Grid>
