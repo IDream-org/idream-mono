@@ -28,14 +28,14 @@ export const collectionsApiSlice = collectionsApiTag.injectEndpoints({
           image: imageURL,
         },
       }),
-      invalidatesTags: ["Collections"],
+      invalidatesTags: ["Collections", "AllCategoryItems"],
     }),
     deleteCollection: builder.mutation<Collections, { collectionId: string }>({
       query: ({ collectionId }) => ({
         url: `${COLLECTIONS_URL}?collectionId=${collectionId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Collections"],
+      invalidatesTags: ["Collections", "AllCategoryItems"],
     }),
   }),
 });

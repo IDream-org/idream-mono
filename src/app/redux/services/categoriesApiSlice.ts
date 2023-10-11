@@ -121,7 +121,7 @@ export const categoriesApiSlice = categoriesApiTag.injectEndpoints({
         url: `${COLLECTIONS_CATEGORIES_URL}?collectionId=${collectionId}&categoryId=${categoryId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Categories"],
+      invalidatesTags: ["Categories", "AllCategoryItems"],
     }),
   }),
 });

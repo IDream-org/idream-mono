@@ -43,6 +43,7 @@ model Collections {
     users      CollectionUsers[]
     categories Categories[]
     private    Boolean           @default(true)
+    createdAt  DateTime          @default(now())
 }
 
 model SubSubCategory {
@@ -130,24 +131,27 @@ type Rating {
 }
 
 type Comments {
-    author  String
-    userId  String
-    comment String
-    id      String
+    author    String
+    userId    String
+    comment   String
+    id        String
+    createdAt DateTime
 }
 
 type Notes {
-    author  String
-    userId  String
-    comment String
-    id      String
+    author    String
+    userId    String
+    comment   String
+    id        String
+    createdAt DateTime
 }
 
 type Photos {
-    author String
-    userId String
-    image  String
-    id     String
+    author    String
+    userId    String
+    image     String
+    id        String
+    createdAt DateTime
 }
 
 enum ItemDesign {

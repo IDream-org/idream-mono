@@ -80,7 +80,6 @@ const CategoryItemsPage = () => {
         );
     }
   };
-  console.log(page);
 
   const renderCategoryItems = () => {
     if (!categoryItems || categoryItems.length === 0) {

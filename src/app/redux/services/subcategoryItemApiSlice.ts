@@ -46,7 +46,7 @@ export const subcategoryItemApiSlice = subcategoryItemApiTag.injectEndpoints({
           itemDesign,
         },
       }),
-      invalidatesTags: ["CategoryItem", "SubcategoryItem"],
+      invalidatesTags: ["CategoryItem", "SubcategoryItem", "AllCategoryItems"],
     }),
   }),
 });

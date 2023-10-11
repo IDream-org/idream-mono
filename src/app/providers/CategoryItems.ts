@@ -37,6 +37,40 @@ export class CategoryItem {
     });
   }
 
+  static async getAlByUserId(userId: string) {
+    return await prisma.collections.findMany({
+      where: {
+        OR: [
+          { authorId: userId },
+          {
+            users: {
+              some: {
+                userId: userId,
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        categories: {
+          include: {
+            items: true,
+            subCategory: {
+              include: {
+                items: true,
+                subSubCategory: {
+                  include: {
+                    items: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   static async createItem(createCategoryItemDto: CreateCategoryItemDto) {
     const {
       categoryId,
@@ -205,6 +239,7 @@ export class CategoryItem {
               author,
               userId,
               comment,
+              createdAt: new Date(),
             },
           ],
         },
@@ -233,6 +268,7 @@ export class CategoryItem {
               author,
               userId,
               comment,
+              createdAt: new Date(),
             },
           ],
         },
@@ -261,6 +297,7 @@ export class CategoryItem {
               author,
               userId,
               image,
+              createdAt: new Date(),
             },
           ],
         },

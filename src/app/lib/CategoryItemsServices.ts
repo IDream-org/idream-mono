@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 import { Collections } from "../providers/Collections";
 import { NotAuthorizedError } from "../models/NotAuthorizedError";
+import authorize from "../middlewares/authorize";
 
 const CategoryItemsServices = {
   getCategoryItemsByCategoryId: authorOrIncludedUserAuthorize(
@@ -38,6 +39,12 @@ const CategoryItemsServices = {
       return NextResponse.json(categoryItem);
     }
   ),
+
+  getAllCategoryItems: authorize(async (request: NextRequest) => {
+    const session = await getServerSession(authOptions);
+    const categoryItems = await CategoryItem.getAlByUserId(session!.user.id);
+    return NextResponse.json(categoryItems);
+  }),
 
   createCategoryItem: isNotMemberAuthorize(async (request: NextRequest) => {
     const {
@@ -456,6 +463,7 @@ const CategoryItemsServices = {
 export const {
   getCategoryItemsByCategoryId,
   getCategoryItemsById,
+  getAllCategoryItems,
   createCategoryItem,
   createSubCategoryItem,
   createSubSubCategoryItem,

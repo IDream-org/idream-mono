@@ -133,7 +133,7 @@ export const subcategoryApiSlice = subsubcategoryApiTag.injectEndpoints({
         url: `${SUB_SUB_CATEGORIES_URL}?collectionId=${collectionId}&subsubcategoryId=${subsubcategoryId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["SubSubCategories"],
+      invalidatesTags: ["SubSubCategories", "AllCategoryItems"],
     }),
   }),
 });

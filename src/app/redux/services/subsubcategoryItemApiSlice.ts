@@ -53,7 +53,11 @@ export const subsubcategoryItemApiSlice =
             itemDesign,
           },
         }),
-        invalidatesTags: ["CategoryItem", "SubSubcategoryItem"],
+        invalidatesTags: [
+          "CategoryItem",
+          "SubSubcategoryItem",
+          "AllCategoryItems",
+        ],
       }),
     }),
   });

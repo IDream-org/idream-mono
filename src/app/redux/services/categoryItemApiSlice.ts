@@ -1,5 +1,10 @@
 import { apiSlice } from "./apiSlice";
-import { CategoryItems, ItemDesign } from "@prisma/client";
+import {
+  Categories,
+  CategoryItems,
+  Collections,
+  ItemDesign,
+} from "@prisma/client";
 import { CATEGORY_ITEMS_URL, CATEGORY_ITEM_URL } from "@/app/constants";
 
 interface GetCategoryItem {
@@ -39,6 +44,14 @@ interface DeleteCategoryItem {
   categoryItemId: string;
 }
 
+interface CollectionsQuery extends Collections {
+  categories: CategoryQuery[];
+}
+
+interface CategoryQuery extends Categories {
+  items: CategoryItems[];
+}
+
 const categoryItemApiTag = apiSlice.enhanceEndpoints({
   addTagTypes: ["CategoryItems"],
 });
@@ -64,6 +77,13 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
       }),
       providesTags: ["CategoryItem"],
     }),
+    getAllCategoryItem: builder.query<CollectionsQuery[], {}>({
+      query: () => ({
+        url: "/api/categoryItems",
+        method: "GET",
+      }),
+      providesTags: ["AllCategoryItems"],
+    }),
     createCategoryItem: builder.mutation<CategoryItems, CreateCategoryItem>({
       query: ({
         item,
@@ -81,7 +101,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
           itemDesign,
         },
       }),
-      invalidatesTags: ["CategoryItems", "CategoryItem"],
+      invalidatesTags: ["CategoryItems", "CategoryItem", "AllCategoryItems"],
     }),
 
     addCategoryItemComment: builder.mutation<
@@ -95,7 +115,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
           comment,
         },
       }),
-      invalidatesTags: ["CategoryItem"],
+      invalidatesTags: ["CategoryItem", "AllCategoryItems"],
     }),
     removeCategoryItemComment: builder.mutation<
       CategoryItems,
@@ -112,7 +132,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
           commentId,
         },
       }),
-      invalidatesTags: ["CategoryItem"],
+      invalidatesTags: ["CategoryItem", "AllCategoryItems"],
     }),
     addCategoryItemNote: builder.mutation<
       CategoryItems,
@@ -125,7 +145,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
           comment,
         },
       }),
-      invalidatesTags: ["CategoryItem"],
+      invalidatesTags: ["CategoryItem", "AllCategoryItems"],
     }),
     removeCategoryItemNote: builder.mutation<
       CategoryItems,
@@ -142,7 +162,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
           noteId,
         },
       }),
-      invalidatesTags: ["CategoryItem"],
+      invalidatesTags: ["CategoryItem", "AllCategoryItems"],
     }),
     addCategoryItemPhoto: builder.mutation<CategoryItems, AddCategoryItemPhoto>(
       {
@@ -201,6 +221,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
         "CategoryItems",
         "SubcategoryItem",
         "SubSubcategoryItem",
+        "AllCategoryItems",
       ],
     }),
   }),
@@ -209,6 +230,7 @@ export const categoryItemApiSlice = categoryItemApiTag.injectEndpoints({
 export const {
   useGetCategoryItemsQuery,
   useGetCategoryItemQuery,
+  useGetAllCategoryItemQuery,
   useCreateCategoryItemMutation,
   useAddCategoryItemCommentMutation,
   useAddCategoryItemNoteMutation,
