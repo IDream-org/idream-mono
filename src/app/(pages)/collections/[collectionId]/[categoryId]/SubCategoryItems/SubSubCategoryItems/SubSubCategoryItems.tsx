@@ -12,10 +12,7 @@ import BasicDialog from "@/components/BasicDialog/BasicDialog";
 import BasicSpeedDial from "@/components/BasicSpeedDial/BasicSpeedDial";
 import WrapperComponent from "@/components/WrapperComponent/WrapperComponent";
 
-import {
-  useDeleteSubSubCategoryMutation,
-  useGetSubSubCategoriesQuery,
-} from "@/app/redux/services/subsubcategoryApiSlice";
+import { useDeleteSubSubCategoryMutation } from "@/app/redux/services/subsubcategoryApiSlice";
 
 import { UserActions } from "@/classes/UserActions";
 import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
