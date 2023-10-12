@@ -103,6 +103,7 @@ const RenderCollectionItem: React.FC<RenderCollectionItemProps> = ({
                     width={500}
                     alt={item.image ?? ""}
                     src={item.image ?? ""}
+                    loading="eager"
                     quality={80}
                     style={{
                       width: "100%",

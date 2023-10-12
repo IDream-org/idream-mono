@@ -166,6 +166,7 @@ const CreateCategoryPage = () => {
                     width={500}
                     height={300}
                     src={file ?? ""}
+                    loading="eager"
                     quality={80}
                     style={{
                       overflow: "hidden",

@@ -96,6 +96,7 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
               alt={item.image || defaultImage}
               src={item.image || defaultImage}
               priority={true}
+              loading="eager"
               quality={80}
               sizes="100vw"
               style={{

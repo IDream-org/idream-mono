@@ -130,6 +130,7 @@ const CreateCollectionPage = () => {
                     height={300}
                     quality={80}
                     src={file ?? ""}
+                    loading="eager"
                     style={{
                       overflow: "hidden",
                       width: "100%",

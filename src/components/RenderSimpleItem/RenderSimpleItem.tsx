@@ -85,6 +85,7 @@ const RenderSimpleItem: React.FC<CategoriesItemsProps> = ({ item }) => {
               width={0}
               alt={item.image || defaultImage}
               src={item.image || defaultImage}
+              loading="eager"
               priority={true}
               quality={80}
               sizes="100vw"
