@@ -24,6 +24,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://vitals.vercel-insights.com" />
+        <link
+          rel="preconnect"
+          href="https://categories-app.s3.us-east-1.amazonaws.com"
+        />
+      </head>
       <body className={inter.className}>
         <ThemeRegistry>
           <Providers>

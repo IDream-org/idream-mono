@@ -262,6 +262,7 @@ const DashboardPage = () => {
                         height={0}
                         sizes="100vw"
                         src={collection.image ?? ""}
+                        loading="eager"
                         quality={80}
                         style={{
                           overflow: "hidden",
