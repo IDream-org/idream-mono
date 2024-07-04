@@ -17,9 +17,9 @@ export const ThemeContext = React.createContext<ThemeContextType>({
 
 export default function ThemeRegistry({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   const [mode = "light", setMode] = React.useState<"light" | "dark">("light");
   const theme = React.useMemo(
     () =>

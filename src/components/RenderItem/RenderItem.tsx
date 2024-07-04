@@ -93,8 +93,8 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
             <Image
               height={0}
               width={0}
-              alt={item.image || defaultImage}
-              src={item.image || defaultImage}
+              alt={item.image ?? defaultImage}
+              src={item.image ?? defaultImage}
               priority={true}
               loading="eager"
               quality={80}
@@ -345,7 +345,7 @@ const RenderItem: React.FC<CategoriesItemsProps> = ({ item, comment }) => {
                     {userActions.isAuthorOrOwnerOrCommentOwner(itemComment) && (
                       <DeleteOutlineIcon
                         color="warning"
-                        onClick={() => comment?.handleRemove!(itemComment.id!)}
+                        onClick={() => comment?.handleRemove!(itemComment.id)}
                       />
                     )}
                   </ListItem>

@@ -1,4 +1,3 @@
-import { Collections } from "@prisma/client";
 import { Session } from "next-auth";
 import { NotAuthorizedError } from "./NotAuthorizedError";
 import { NextResponse } from "next/server";

@@ -48,17 +48,15 @@ const CollectionsPage = () => {
   };
 
   return (
-    <React.Fragment>
-      <Grid container display={"flex"} justifyContent={"center"}>
-        <Grid item xs={12} lg={10}>
-          <WrapperComponent
-            loading={isLoading}
-            error={error}
-            component={renderCollections()}
-          />
-        </Grid>
+    <Grid container display={"flex"} justifyContent={"center"}>
+      <Grid item xs={12} lg={10}>
+        <WrapperComponent
+          loading={isLoading}
+          error={error}
+          component={renderCollections()}
+        />
       </Grid>
-    </React.Fragment>
+    </Grid>
   );
 };
 

@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Roles } from "@prisma/client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -27,7 +26,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function CustomTabPanel(props: TabPanelProps) {
+function CustomTabPanel(props: Readonly<TabPanelProps>) {
   const { children, value, index, ...other } = props;
 
   return (

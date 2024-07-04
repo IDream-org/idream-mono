@@ -41,7 +41,7 @@ const SubCategoryItemsGallery = () => {
   const { data: collection } = useGetCollectionQuery({ collectionId });
   const { data: subCategory } = useGetSubcategoryQuery({
     collectionId,
-    subcategoryId: subcategoryId || "",
+    subcategoryId: subcategoryId ?? "",
   });
 
   const userActions = new UserActions(session, collection);

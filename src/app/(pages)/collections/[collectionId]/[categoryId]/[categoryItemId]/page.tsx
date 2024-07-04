@@ -55,7 +55,7 @@ const CategoriesItems = () => {
   const [changeCategoryItemFavorite] = useChangeCategoryItemFavoriteMutation();
   const [deleteCategoryItem] = useDeleteCategoryItemMutation();
 
-  const [item, setItems] = useState<CategoryItems>({} as CategoryItems);
+  const [item, setItem] = useState<CategoryItems>({} as CategoryItems);
 
   const [page, setPage] = useState(Page.DEFAULT);
 
@@ -65,7 +65,7 @@ const CategoriesItems = () => {
 
   useEffect(() => {
     if (!isLoading) {
-      setItems(data || ({} as CategoryItems));
+      setItem(data ?? ({} as CategoryItems));
     }
   }, [isLoading, data]);
 
@@ -77,7 +77,7 @@ const CategoriesItems = () => {
         categoryItemId: item.id,
         done,
       }).unwrap();
-      setItems(updatedCategoryItem);
+      setItem(updatedCategoryItem);
     } catch (error) {
       console.error("Failed adding favorite");
     }
@@ -162,13 +162,13 @@ const CategoriesItems = () => {
   const getPage = (page: Page) => {
     switch (page) {
       case Page.DEFAULT:
-        return <DefaultPage item={item} setItems={setItems} />;
+        return <DefaultPage item={item} setItems={setItem} />;
       case Page.NOTES:
-        return <NotesPage item={item} setItems={setItems} />;
+        return <NotesPage item={item} setItems={setItem} />;
       case Page.GALLRY:
         return <GalleryPage item={item} />;
       default:
-        return <DefaultPage item={item} setItems={setItems} />;
+        return <DefaultPage item={item} setItems={setItem} />;
     }
   };
 

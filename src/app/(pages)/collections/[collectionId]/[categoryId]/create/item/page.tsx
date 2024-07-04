@@ -97,7 +97,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
       total: 0,
     },
   });
-  const [filesToUpload, setFileToUpadload] = useState<any>("");
+  const [filesToUpload, setFilesToUpload] = useState<any>("");
 
   const getItems = useCallback(async () => {
     if (isLoading) return;
@@ -229,7 +229,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
             file={file}
             setData={setData}
             setFile={setFile}
-            setFileToUpadload={setFileToUpadload}
+            setFileToUpadload={setFilesToUpload}
           />
         );
       case 4:
@@ -262,7 +262,7 @@ const CreateCategoryItemPage: React.FC<CreateCategoryItemPageProps> = ({
             file={file}
             setData={setData}
             setFile={setFile}
-            setFileToUpadload={setFileToUpadload}
+            setFileToUpadload={setFilesToUpload}
           />
         );
       case 3:

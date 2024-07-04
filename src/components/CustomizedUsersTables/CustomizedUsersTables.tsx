@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { CustomizedTablesProps } from "./CustomizedUsersTablesProps";
-import { Avatar, Grid, useMediaQuery } from "@mui/material";
+import { Avatar, Grid } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,7 +49,6 @@ const CustomizedTables: React.FC<CustomizedTablesProps> = ({
   rows,
 }) => {
   const theme = useTheme();
-  const mdSize = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <TableContainer sx={{ maxHeight: "900px" }} component={Paper}>
       <Table

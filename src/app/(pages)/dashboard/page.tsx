@@ -88,7 +88,7 @@ const DashboardPage = () => {
   const { data, isLoading } = useGetAllCategoryItemQuery({});
   const { data: usersQuery } = useGetUsersQuery({});
 
-  const [lading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<Items[]>([]);
   const [comments, setComments] = useState<Comments[]>([]);
 
@@ -102,7 +102,7 @@ const DashboardPage = () => {
     }
   }, [isLoading, data]);
 
-  return lading ? (
+  return loading ? (
     <CenterLoading />
   ) : (
     <Grid container justifyContent={"center"}>

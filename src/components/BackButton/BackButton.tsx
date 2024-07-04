@@ -16,7 +16,7 @@ const BackButton: React.FC<BackButtonProps> = ({ path, onClick }) => {
       sx={{
         ml: lgSize ? 0 : 8,
       }}
-      onClick={onClick ? onClick : () => router.push(path)}
+      onClick={onClick || (() => router.push(path))}
     >
       <KeyboardBackspaceIcon fontSize="large" />
     </Button>

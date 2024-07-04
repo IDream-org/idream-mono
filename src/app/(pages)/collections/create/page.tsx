@@ -31,7 +31,7 @@ const CreateCollectionPage = () => {
 
   const [title, setTitle] = useState<string>("");
   const [file, setFile] = useState<string>("");
-  const [filesToUpload, setFileToUpadload] = useState<File>();
+  const [filesToUpload, setFilesToUpload] = useState<File>();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/png": [".png", ".jpg", ".jpeg"],
@@ -39,7 +39,7 @@ const CreateCollectionPage = () => {
     maxFiles: 1,
     onDropAccepted(files, event) {
       const reader = new FileReader();
-      setFileToUpadload(files[0]);
+      setFilesToUpload(files[0]);
       reader.readAsDataURL(files[0]);
 
       reader.onload = () => {

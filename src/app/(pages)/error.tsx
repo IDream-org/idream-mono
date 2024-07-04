@@ -3,10 +3,10 @@
 export default function Error({
   error,
   reset,
-}: {
+}: Readonly<{
   error: Error;
   reset: () => void;
-}) {
+}>) {
   console.log(error);
   return (
     <div>

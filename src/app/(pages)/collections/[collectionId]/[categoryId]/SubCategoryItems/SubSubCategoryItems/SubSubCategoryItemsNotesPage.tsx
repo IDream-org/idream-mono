@@ -54,7 +54,7 @@ const SubSubCategoryItemsNotesPage = () => {
 
   const { data: item } = useGetSubSubCategoryQuery({
     collectionId,
-    subsubcategoryId: subsubcategoryId || "",
+    subsubcategoryId: subsubcategoryId ?? "",
   });
   const [addSubSubCategoryItemNote] = useAddSubSubCategoryNoteMutation();
   const [removeSubSubCategoryItemNote] = useRemoveSubSubCategoryNoteMutation();

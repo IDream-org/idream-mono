@@ -3,10 +3,10 @@
 export default function GlobalError({
   error,
   reset,
-}: {
+}: Readonly<{
   error: Error;
   reset: () => void;
-}) {
+}>) {
   return (
     <html>
       <body>

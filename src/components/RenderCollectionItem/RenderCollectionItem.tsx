@@ -35,7 +35,7 @@ const RenderCollectionItem: React.FC<RenderCollectionItemProps> = ({
   const lgSize = useMediaQuery(theme.breakpoints.down("lg"));
   const xlSize = useMediaQuery(theme.breakpoints.down("xl"));
 
-  const [item, setItems] = useState<CategoryItems[]>([]);
+  const [items, setItems] = useState<CategoryItems[]>([]);
 
   const extraLarge = xlSize ? 3 : 4;
   const largeImage = lgSize ? 2 : extraLarge;
@@ -54,9 +54,7 @@ const RenderCollectionItem: React.FC<RenderCollectionItemProps> = ({
     if (reason === "clear") {
       return setItems(categoryItems ?? []);
     } else {
-      const filteredItems = categoryItems!.filter(
-        (item) => item.title == value
-      );
+      const filteredItems = categoryItems.filter((item) => item.title == value);
       setItems(filteredItems);
     }
   };
@@ -78,7 +76,7 @@ const RenderCollectionItem: React.FC<RenderCollectionItemProps> = ({
         </Grid>
         <Grid>
           <ImageList cols={getImageSize()} gap={10}>
-            {item.map((item) => (
+            {items.map((item) => (
               <Grid item key={item.id} xs={12}>
                 <ImageListItem
                   sx={{

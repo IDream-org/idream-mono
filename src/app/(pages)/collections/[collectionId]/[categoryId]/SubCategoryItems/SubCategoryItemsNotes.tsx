@@ -46,7 +46,7 @@ const SubCategoryItemsNotes = () => {
   const { data } = useGetUsersQuery({});
   const { data: item } = useGetSubcategoryQuery({
     collectionId,
-    subcategoryId: subcategoryId || "",
+    subcategoryId: subcategoryId ?? "",
   });
   const { data: collection } = useGetCollectionQuery({ collectionId });
 
