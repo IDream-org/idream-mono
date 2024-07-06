@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Skeleton from "@mui/material/Skeleton";
 
-const MultipleSkeletons = ({ onClick }: { onClick: () => void }) => {
+const MultipleSkeletons = ({ onClick }: { onClick?: () => void }) => {
   return (
     <Grid container wrap="nowrap" onClick={onClick}>
       <Box key={1} sx={{ width: 210, marginRight: 0.5, my: 5 }}>

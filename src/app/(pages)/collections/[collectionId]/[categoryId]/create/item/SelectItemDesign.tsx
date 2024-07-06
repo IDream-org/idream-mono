@@ -8,6 +8,12 @@ import MultipleSkeletons from "@/components/MultipleSkeletons/MultipleSkeletons"
 import SingleSkeleton from "@/components/SingleSkeleton/SingleSkeleton";
 import BackButton from "@/components/BackButton/BackButton";
 
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+
 interface SelectItemDesignProps {
   setItemDesign: React.Dispatch<
     React.SetStateAction<$Enums.ItemDesign | undefined>
@@ -44,11 +50,50 @@ const SelectItemDesign: React.FC<SelectItemDesignProps> = ({
         }
       />
       <Grid container mt={4} justifyContent={"center"}>
-        <Grid item xs={10}>
-          <SingleSkeleton onClick={() => setItemDesign(ItemDesign.Simple)} />
-          <MultipleSkeletons
-            onClick={() => setItemDesign(ItemDesign.Advanced)}
-          />
+        <Grid container justifyContent={"space-evenly"} xs={10}>
+          <Card sx={{ position: "relative", minWidth: 275 }}>
+            <CardContent>
+              <Typography
+                sx={{ fontSize: 16, fontWeight: "bold" }}
+                color="text.secondary"
+                gutterBottom
+              >
+                Simple
+              </Typography>
+              <SingleSkeleton />
+            </CardContent>
+            <CardActions>
+              <Button
+                sx={{ position: "absolute", bottom: 0 }}
+                onClick={() => setItemDesign(ItemDesign.Simple)}
+                size="small"
+              >
+                Select
+              </Button>
+            </CardActions>
+          </Card>
+
+          <Card sx={{ position: "relative", minWidth: 275 }}>
+            <CardContent>
+              <Typography
+                sx={{ fontSize: 16, fontWeight: "bold" }}
+                color="text.secondary"
+                gutterBottom
+              >
+                Standard
+              </Typography>
+              <MultipleSkeletons />
+            </CardContent>
+            <CardActions>
+              <Button
+                sx={{ position: "absolute", bottom: 0 }}
+                onClick={() => setItemDesign(ItemDesign.Advanced)}
+                size="small"
+              >
+                Select
+              </Button>
+            </CardActions>
+          </Card>
         </Grid>
       </Grid>
     </>

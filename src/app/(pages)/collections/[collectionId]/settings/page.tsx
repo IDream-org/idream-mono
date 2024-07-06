@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Roles } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { SxProps, Theme, useMediaQuery, useTheme } from "@mui/material";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
@@ -20,6 +20,8 @@ import BackButton from "@/components/BackButton/BackButton";
 import WrapperComponent from "@/components/WrapperComponent/WrapperComponent";
 import { useGetCollectionQuery } from "@/app/redux/services/collectionApiSlice";
 import Settings from "./Settings";
+import Options from "./Options";
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -100,7 +102,6 @@ const CollectionSettingsPage = () => {
                 borderRadius: "10px",
                 mr: "auto",
                 ml: "auto",
-                cursor: "pointer",
               }}
               variant="rounded"
             />
@@ -132,11 +133,11 @@ const CollectionSettingsPage = () => {
                     label="Users"
                     {...a11yProps(1)}
                   />
-                  <Tab
+                  {/* <Tab
                     sx={{ height: "60px", width: mdSize ? "40px" : "unset" }}
                     label="Requests"
                     {...a11yProps(3)}
-                  />
+                  /> */}
                   <Tab
                     sx={{ height: "60px", display: "grid", ml: "auto" }}
                     label={<MoreHorizIcon />}
@@ -150,11 +151,11 @@ const CollectionSettingsPage = () => {
               <CustomTabPanel value={value} index={1}>
                 <Users />
               </CustomTabPanel>
-              <CustomTabPanel value={value} index={2}>
+              {/* <CustomTabPanel value={value} index={2}>
                 Requests
-              </CustomTabPanel>
-              <CustomTabPanel value={value} index={3}>
-                Delete
+              </CustomTabPanel> */}
+              <CustomTabPanel value={value} index={2}>
+                <Options />
               </CustomTabPanel>
             </Box>
           </Grid>

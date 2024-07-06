@@ -94,7 +94,7 @@ const CollectionsCategories = () => {
         />
         <BasicDialog
           title={`Delete ${collectionId}`}
-          text="Are you sure you want to delete this category? All of its itens will be delete."
+          text="Are you sure you want to delete this collection? All of its itens will be delete."
           confirmText="Delete"
           cancelText="Cancel"
           open={openDialog}
